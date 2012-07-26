@@ -1,0 +1,42 @@
+{
+   "abstract" : "SQLite database of derivations of given names",
+   "author" : [
+      "Ron Savage <ron@savage.net.au>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Module::Build version 0.4001, CPAN::Meta::Converter version 2.120630",
+   "license" : [
+      "artistic_1"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Lingua-EN-GivenNames",
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "Test::More" : "0.96",
+            "Test::Pod" : "1.44"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "Module::Build" : "0.38"
+         }
+      }
+   },
+   "provides" : {
+      "Lingua::EN::GivenNames" : {
+         "file" : "lib/Lingua/EN/GivenNames.pm",
+         "version" : "1.00"
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "license" : [
+         "http://opensource.org/licenses/artistic-license.php"
+      ]
+   },
+   "version" : "1.00"
+}
