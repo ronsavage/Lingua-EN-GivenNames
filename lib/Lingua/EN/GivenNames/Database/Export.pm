@@ -29,7 +29,7 @@ sub as_csv
 
 	push @row,
 	[
-		qw/id name form kind meaning original sex source/
+		qw/id name derivation form kind meaning original sex source/
 	];
 
 	for my $name (@{$self -> read_names_table})
@@ -38,6 +38,7 @@ sub as_csv
 		[
 			$$name{id},
 			$$name{name},
+			$$name{derivation},
 			$$name{form},
 			$$name{kind},
 			$$name{meaning},
