@@ -13,9 +13,8 @@ use Text::Xslate 'mark_raw';
 
 use Unicode::Normalize; # For NFC().
 
-fieldhash my %names_file    => 'names_file';
-fieldhash my %templater     => 'templater';
-fieldhash my %web_page_file => 'web_page_file';
+fieldhash my %output_file => 'output_file';
+fieldhash my %templater   => 'templater';
 
 our $VERSION = '1.00';
 
@@ -24,6 +23,8 @@ our $VERSION = '1.00';
 sub as_csv
 {
 	my($self) = @_;
+
+	die "No name_file name specified\n" if (! $self -> output_file);
 
 	my(@row);
 
@@ -48,9 +49,7 @@ sub as_csv
 		];
 	}
 
-	die "No name_file name specified\n" if (! $self -> names_file);
-
-	open(OUT, '>', $self -> names_file) || die "Can't open file: " . $self -> names_file . "\n";
+	open(OUT, '>', $self -> output_file) || die "Can't open file: " . $self -> output_file . "\n";
 
 	for (@row)
 	{
@@ -68,9 +67,9 @@ sub as_html
 	my($self)   = @_;
 	my($config) = $self -> config;
 
-	die "No web_page_file name specified\n" if (! $self -> web_page_file);
+	die "No web_page_file name specified\n" if (! $self -> output_file);
 
-	open(OUT, '>', $self -> web_page_file) || die "Can't open file: " . $self -> web_page_file . "\n";
+	open(OUT, '>', $self -> output_file) || die "Can't open file: " . $self -> output_file . "\n";
 	binmode(OUT);
 
 	print OUT $self -> templater -> render
@@ -119,11 +118,10 @@ sub build_names_data
 
 sub _init
 {
-	my($self, $arg)       = @_;
-	$$arg{names_file}     ||= 'given.names.csv'; # Caller can set.
-	$$arg{templater}      = '';
-	$$arg{web_page_file } ||= 'given.names.html'; # Caller can set.
-	$self                 = $self -> SUPER::_init($arg);
+	my($self, $arg)    = @_;
+	$$arg{output_file} ||= 'given.names.csv'; # Caller can set.
+	$$arg{templater}   = '';
+	$self              = $self -> SUPER::_init($arg);
 
 	$self -> templater
 	(

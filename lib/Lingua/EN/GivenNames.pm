@@ -26,10 +26,10 @@ our $VERSION = '1.00';
 sub _init
 {
 	my($self, $arg)    = @_;
-	$$arg{config_file} ||= '.htlocale.givennames.en.conf'; # Caller can set.
+	$$arg{config_file} ||= '.htlingua.en.givennames.conf'; # Caller can set.
 	$$arg{data_dir}    = 'data';
 	$$arg{sex}         ||= ''; # Caller can set.
-	$$arg{sqlite_file} ||= 'locale.givennames.en.sqlite';  # Caller can set.
+	$$arg{sqlite_file} ||= 'lingua.en.givennames.sqlite';  # Caller can set.
 	$$arg{verbose}     ||= 0; # Caller can set.
 	$self              = from_hash($self, $arg);
 	(my $package       = __PACKAGE__) =~ s/::/-/g;

@@ -7,8 +7,6 @@ use strict;
 use warnings;
 use warnings qw(FATAL utf8);
 
-use Data::Dumper::Concise;
-
 use DBI;
 
 use Encode; # For decode().
@@ -128,7 +126,7 @@ sub import_derivations
 
 	for (@$derivation)
 	{
-		$$_{derivation} = "$$_{kind} $$_{form} of $$_{source} $$_{original}: '$$_{meaning}'";
+		$$_{derivation} = "$$_{kind} $$_{form} of $$_{source} $$_{original}: $$_{meaning}";
 	}
 
 	my($table_name) = $self -> table_names;

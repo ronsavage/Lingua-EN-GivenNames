@@ -24,7 +24,7 @@ if ($option_parser -> getoptions
 (
 	\%option,
 	'help',
-	'names_file=s',
+	'output_file=s',
 	'verbose=s',
 ) )
 {
@@ -51,7 +51,7 @@ export.as.html.pl [options]
 
 	Options:
 	-help
-	-names_file $aFileName
+	-output_file $aFileName
 	-verbose $integer
 
 All switches can be reduced to a single letter.
@@ -66,7 +66,7 @@ Default output: Screen.
 
 =over 4
 
-=item o -names_file $aFileName
+=item o -output_file $aFileName
 
 A CSV file name, to which given name data will be written.
 
