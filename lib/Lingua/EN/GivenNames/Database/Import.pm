@@ -19,6 +19,8 @@ use HTML::TreeBuilder;
 
 use Perl6::Slurp; # For slurp().
 
+use Text::CSV;
+
 use Unicode::CaseFold;  # For fc().
 use Unicode::Normalize; # For NFD(), NFC().
 
@@ -176,7 +178,7 @@ sub _parse_definition
 			$meaning    =~ s/[,.]$//;
 			$meaning    =~ s/^\s//;
 			$name       =~ s/\s+\(.+\)//;
-			$derivation = "$name: $sex. $kind $form of $source $original: '$meaning'";
+			$derivation = "$name: $sex. $kind $form of $source $original: $meaning";
 
 			# Skip junk by hex and freaks which trick my 'parser'.
 
@@ -270,8 +272,8 @@ sub parse_derivations
 				Scottish(?:\s+Anglicized)?|Short|Slovak|Spanish|Unisex|
 				(?:V|v)ariant
 				)\s+?
-			((?:(?:contracted|diminutive|elaborated|feminine|pet|short|unisex|variant)?\s*?) # 4 => Form.
-			(?:equivalent|form|spelling)\s+?)
+			((?:(?:adopted|contracted|diminutive|elaborated|feminine|form|pet|short|unisex|variant)?\s*?) # 4 => Form.
+			(?:equivalent|form|spelling|use)\s+?)?
 			(?:of\s+?)?(.+?)\s+?(.+?)\s*?(?:,\s*?)?           # 5 => Source, 6 => Original.
 			(?:possibly\s+?)?meaning\s*?(?:simply\s*)?"(.+?)" # 7 => Meaning.
 			/x,
@@ -296,24 +298,39 @@ sub parse_derivations
 
 	$self -> log(debug => "Target count: " . scalar @name . ". Match count: $match_count. Mis-match count: $mismatch_count");
 
-	my($derived_file_name) = File::Spec -> catfile($self -> data_dir, 'derivations.cooked');
+	my($csv)               = Text::CSV -> new({binary => 1});
+	my($derived_file_name) = File::Spec -> catfile($self -> data_dir, 'derivations.csv');
 
-	open(OUT, '>>', $derived_file_name) || die "Can't open($derived_file_name): $!\n";
-	binmode OUT;
+	my(@column);
+	my(@row);
 
 	for my $key (keys %pattern)
 	{
+		# Loop over all stacks. Any field besides kind could be used.
+
 		for my $index (0 .. $#{$matched{$key}{kind} })
 		{
-			for my $set (grep{! /derivation/} sort keys %{$matched{$key} })
+			@column = ();
+
+			for my $set (sort grep{! /derivation/} keys %$table_name)
 			{
-				print OUT "$set: $matched{$key}{$set}[$index]. ";
+				push @column, $matched{$key}{$set}[$index];
 			}
 
-			print OUT "\n";
+			die "Can't combine fields into a CSV string\n" if (! $csv -> combine(@column) );
+
+			push @row, $csv -> string;
 		}
 	}
 
+	open(OUT, '>>', $derived_file_name) || die "Can't open($derived_file_name): $!\n";
+	binmode OUT;
+	die "Can't combine headers into a CSV string\n" if (! $csv -> combine(sort grep{! /derivation/} keys %$table_name) );
+	print OUT $csv -> string, "\n";
+
+	print '-' x 50, "\n", $csv -> string, "\n", '-' x 50, "\n";
+
+	print OUT map{"$_\n"} @row;
 	close OUT;
 
 	$self -> log(debug => "Updated $derived_file_name");
@@ -342,7 +359,7 @@ sub parse_derivations
 sub read_derivations
 {
 	my($self)      = @_;
-	my($file_name) = File::Spec -> catfile($self -> data_dir, 'derivations.cooked');
+	my($file_name) = File::Spec -> catfile($self -> data_dir, 'derivations.csv');
 
 	# This produces an erroneous result.
 	# my(@line)      = slurp '< :raw', $file_name, {chomp => 1};
