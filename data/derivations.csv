@@ -40,12 +40,9 @@ form,Short,"father of a multitude",ABRA,Abrahamit,female,Hebrew
 form,Pet,"noble sort",ADDIE,Adelaide,female,English
 form,Pet,"noble sort",ADDY,Adelaide,female,English
 form,Latin,noble,ADELA,Adala,female,German
-form,English,"noble sort",ADELAIDE,AdÃ¯¿½laÃ¯¿½de,female,French
-form,English,"noble sort",ADELE,AdÃ¯¿½le,female,French
 form,Variant,noble,ADELIA,Adela,female,Latin
 "variant form",English,"noble sort",ADELICE,Adelais,female,French
 form,Elaborated,"noble sort",ADELICIA,Adelice,female,English
-form,Diminutive,"little noble",ADELINE,AdÃ¯¿½le,female,French
 form,French,noble,ADELLE,Adala,female,German
 form,English,"born of the same womb; sibling",ADELPHIE,Adelphe,female,French
 "variant spelling",English,"little noble",ADELYNA,Adelina,female,Italian/Spanish
@@ -62,14 +59,12 @@ spelling,Variant,"from Hadria",ADREA,Adria,female,English
 spelling,Variant,"from Hadria",ADREANA,Adriana,female,Latin
 spelling,Variant,"from Hadria",ADREEA,Adria,female,English
 form,Feminine,"from Hadria",ADRIA,Adrian,female,English
-form,Feminine,"from Hadria",ADRIANA,"Adrianus, Spanish AdriÃ¯¿½n, and Italian Adriano, all",female,Latin
 "variant spelling",English,"from Hadria",ADRIANAH,Adriana,female,Latin
 form,Feminine,"from Hadria",ADRIANE,Adrian,female,English
 "feminine form",Polish,"from Hadria",ADRIANNA,Adrianus,female,Latin
 form,Feminine,"from Hadria",ADRIANNAH,Adrian,female,English
 form,Feminine,"from Hadria",ADRIANNE,Adrian,female,English
 form,Pet,"from Hadria",ADRIE,Adriane,female,English
-form,Anglicized,Ireland,AERYN,"Gaelic Ã¯¿½irinn",female,Irish
 spelling,Variant,Ireland,AERYNN,Aeryn,female,English
 spelling,Variant,"land of the Afri",AFFRICA,Africa,female,English
 spelling,Variant,"land of the Afri",AFFRICAH,Africa,female,English
@@ -83,13 +78,11 @@ form,Latin,good,AGATHA,Agathe,female,Greek
 spelling,Variant,chaste,AGGI,Aggie,female,English
 spelling,Variant,chaste,AGGY,Aggie,female,English
 spelling,Variant,chaste,AGGYE,Aggie,female,English
-form,English,"chaste; holy",AGNES,AgnÃ¯¿½s,female,French
 spelling,Variant,"chaste; holy",AGNUS,Agnes,female,English
 form,Anglicized,falcon,AIAH,"unisex Ayah",female,Hebrew
 form,Anglicized,face,AIDEEN,"Gaelic Ã¯¿½taÃ¯¿½n",female,Irish
 form,Pet,"little Eve",AILA,Aileen,female,English
 form,Short,"little Eve",AILEE,Aileen,female,English
-form,"Scottish Anglicized","little Eve",AILEEN,AibhilÃ¯¿½n,female,Gaelic
 spelling,Variant,"little Eve",AILENE,Aileen,female,English
 form,Pet,"little Eve",AILEY,Aileen,female,English
 form,Pet,"little Eve",AILIE,Aileen,female,English
@@ -446,7 +439,6 @@ form,Pet,darling,CHERETTE,Cherie,female,English
 spelling,Variant,darling,CHERI,Cherie,female,English
 spelling,Variant,cherry,CHERICE,Cherise,female,English
 "variant spelling",English,cherry,CHERISE,Cerise,female,French
-spelling,Variant,"little Å ahÃ­ya",CHEYANNE,"unisex Cheyenne",female,English
 form,Latin,"green shoot",CHLOE,"ChloÄ“",female,Greek
 form,Latin,"green buds",CHLORIS,Khloris,female,Greek
 form,Feminine,"good fortune",CHONSIE,Chauncey,female,English
@@ -2438,7 +2430,6 @@ form,Pet,man,CHAZ,Charles,male,English
 form,Anglicized,"Jehovah establishes",CHENANIAH,Kenanyah,male,Hebrew
 form,Anglicized,increase,CHESED,Kesed,male,Hebrew
 form,Pet,"soldier's camp",CHET,Chester,male,English
-spelling,Variant,"little Å ahÃ­ya",CHEYANNE,"unisex Cheyenne",male,English
 form,English,Christ-bearer,CHRISTOPHER,Christophorus,male,Latin
 form,Pet,man,CHUCK,Charles,male,English
 form,Pet,man,CHUCKIE,Charles,male,English
@@ -3344,7 +3335,6 @@ form,Short,"pierced valley",PERCE,Percival,male,English
 form,English,"pierced valley",PERCIVAL,Percevel,male,French
 form,Pet,wanderer,PERRY,Peregrine,male,English
 form,Short,"rock, stone",PETE,Peter,male,English
-form,Anglicized,"patrician, of noble descent",PETER,"Gaelic PÃ draig",male,Scottish
 form,Pet,"rock, stone",PETERKIN,Peter,male,English
 spelling,Variant,"PÃ¦ga's settlement",PEYTON,"unisex Payton",male,English
 form,Anglicized,distinguished,PHALLU,Palluw,male,Hebrew
@@ -3670,7 +3660,6 @@ form,Anglicized,"clean, innocent",ZACCAI,Zakkay,male,Hebrew
 form,Short,"whom Jehovah remembered",ZACH,Zachary,male,English
 form,Anglicized,"whom Jehovah remembered",ZACHARIAH,Zekaryah,male,Hebrew
 form,English,"whom Jehovah remembered",ZACHARY,Zacharias,male,Greek
-form,Anglicized,sea-mew,ZACHERY,"Gaelic SgÃ ire",male,Scottish
 form,Short,"whom Jehovah remembered",ZACK,Zackary,male,English
 spelling,Variant,"whom Jehovah remembered",ZACKARY,Zachary,male,English
 spelling,Variant,"whom Jehovah remembered",ZACKERY,Zackary,male,English

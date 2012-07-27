@@ -114,6 +114,16 @@ sub extract_derivations
 
 # -----------------------------------------------
 
+sub generate_derivation
+{
+	my($self, $item) = @_;
+
+	return "$$item{kind} $$item{form} of $$item{source} $$item{original}: $$item{meaning}";
+
+} # End of generate_derivation.
+
+# -----------------------------------------------
+
 sub _init
 {
 	my($self, $arg)    = @_;
@@ -139,7 +149,7 @@ sub import_derivations
 
 	for my $item (@$derivation)
 	{
-		$s = "$$item{kind} $$item{form} of $$item{source} $$item{original}: $$item{meaning}";
+		$s = $self -> generate_derivation($item);
 
 		if ($seen{$s})
 		{
@@ -249,7 +259,10 @@ sub parse_derivations
 	close INX;
 	chomp @name;
 
-	my(@unparsable) = slurp(File::Spec -> catfile($self -> data_dir, 'unparsable.txt'), {chomp => 1});
+	my(@unparsable) = map{tr/a-z/A-Z/; $_} slurp(File::Spec -> catfile($self -> data_dir, 'unparsable.txt'), {chomp => 1});
+
+	$self -> log(debug => 'Names which are currently unparsable:');
+	$self -> log(debug => $_) for sort @unparsable;
 
 	my(%unparsable);
 
@@ -318,7 +331,7 @@ sub parse_derivations
 		{
 			if ($self -> _parse_definition(\$match_count, \%matched, $key, $pattern{$key}, \%unparsable, $name) )
 			{
-				$found = 1;
+				$found = $key;
 
 				last;
 			}
@@ -327,6 +340,13 @@ sub parse_derivations
 		if ($found)
 		{
 			$match_count++;
+
+			if ($name =~ /(?:ALLISTAIR|ANTONY)/)
+			{
+				$self -> log(debug => '-' x 50);
+				$self -> log(debug => "Pattern: $found");
+				$self -> log(debug => '-' x 50);
+			}
 		}
 		else
 		{
@@ -655,6 +675,59 @@ See L</Constructor and initialization>.
 =head1 FAQ
 
 For the database schema, etc, see L<Lingua::EN::GivenNames/FAQ>.
+
+=head2 How is the input scanned?
+
+The regexps in sub parse_derivations() split each line of data/derivations.raw into these fields:
+
+=over 4
+
+=item o $1 => Sex
+
+=item o $2 => Name
+
+=item o $3 => Kind
+
+=item o $4 => Form
+
+=item o $5 => Source
+
+=item o $6 => Original
+
+=item o $7 => Meaning
+
+=back
+
+=head3 Matches using pattern 'a'
+
+So, 'male. ALLISTAIR: Anglicized form of Scottish Gaelic Alastair, meaning "defender of mankind."' becomes the
+hashref (with keys in alphabetical order):
+
+	{
+		form     => 'form',
+		kind     => 'Anglicized',
+		meaning  => 'defender of mankind',
+		name     => 'ALLISTAIR',
+		original => 'Alastair',
+		sex      => 'male',
+		source   => 'Scottish Gaelic',
+	}
+
+and, 'male. ANTONY: Variant spelling of English Anthony, possibly meaning "invaluable."' becomes:
+
+	{
+		form     => 'spelling',
+		kind     => 'Variant',
+		meaning  => 'invaluable',
+		name     => 'ANTONY',
+		original => 'Anthony',
+		sex      => 'male',
+		source   => 'English',
+	}
+
+In each case the derivation is built by sub generate_derivation($item) as:
+
+	"$$item{kind} $$item{form} of $$item{source} $$item{original}: $$item{meaning}"
 
 =head1 References
 
