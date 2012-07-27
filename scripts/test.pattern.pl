@@ -14,21 +14,28 @@ my($s) = 'female. BEVIN: Anglicized form of Irish Gaelic Béibhinn, meaning "fai
 
 say $s;
 
+	my($sub_pattern) = <<'EOS';
+Anglicized|Breton|Contracted|Diminutive|Elaborated|
+English\s+?and\s+?(?:French|German|Latin|Scottish)|
+(?:(?:American|British)\s+?)?English|
+Feminine|French|Irish\s+?Gaelic|
+Latin|Latvian|Medieval\s+?English|Modern|
+Old\s+?English|Pet|Polish|
+Scottish(?:\s+Anglicized)?|Short|Slovak|Spanish|Unisex|
+(?:V|v)ariant
+EOS
+	my($sub_pattern_2) = <<'EOS';
+(?:(?:adopted|contracted|diminutive|elaborated|feminine|pet|short|unisex|variant)?\s*?
+EOS
+	# Note for 2 => Name: Beware 'NAME (Text):'. Also, text can contain ':'.
 if ($s =~	/
-			(.+?)\.\s # 1 => Sex.
-			(.+?):\s* # 2 => Name. But beware 'NAME (Text):'. And Text can contain ':'.
-				(     # 3 => Kind.
-				Anglicized|Breton|Contracted|Diminutive|Elaborated|
-				English\s+?and\s+?(?:French|German|Latin|Scottish)|
-				(?:(?:American|British)\s+?)?English|
-				Feminine|French|Irish\s+?Gaelic|
-				Latin|Latvian|Medieval\s+?English|Modern|
-				Old\s+?English|Pet|Polish|
-				Scottish(?:\s+Anglicized)?|Short|Slovak|Spanish|Unisex|
-				(?:V|v)ariant
-				)\s+?
-			(form)\s+?                                        # 4 => Form.
-			(?:of\s+?)(.+?\s+?.+?)\s+?(.+?)(?:,\s*?)?         # 5 => Source, 6 => Original.
+		a => qr/
+			(.+?)\.\s            # 1 => Sex.
+			(.+?):\s*            # 2 => Name.
+			($sub_pattern_1)\s+? # 3 => Kind.
+			($sub_pattern_2)     # 4 => Form.
+			(?:equivalent|form|spelling|use)\s+?)
+			(?:of\s+?)?(.+?)\s+?(.+?)\s*?(?:,\s*?)?           # 5 => Source, 6 => Original.
 			(?:possibly\s+?)?meaning\s*?(?:simply\s*)?"(.+?)" # 7 => Meaning.
 			/x,
 	)

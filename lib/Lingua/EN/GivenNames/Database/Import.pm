@@ -268,39 +268,36 @@ sub parse_derivations
 
 	@unparsable{@unparsable} = (1) x @unparsable;
 
+	my($sub_pattern_1) = <<'EOS';
+Anglicized|Breton|Contracted|Diminutive|Elaborated|
+English\s+?and\s+?(?:French|German|Latin|Scottish)|
+(?:(?:American|British)\s+?)?English|
+Feminine|French|Irish\s+?Gaelic|
+Latin|Latvian|Medieval\s+?English|Modern|
+Old\s+?English|Pet|Polish|
+Scottish(?:\s+Anglicized)?|Short|Slovak|Spanish|Unisex|
+(?:V|v)ariant
+EOS
+	my($sub_pattern_2) = <<'EOS';
+(?:(?:adopted|contracted|diminutive|elaborated|feminine|pet|short|unisex|variant)?\s*?
+EOS
+	# Note for 2 => Name: Beware 'NAME (Text):'. Also, text can contain ':'.
+
 	my(%pattern) =
 	(
 		a => qr/
-			(.+?)\.\s # 1 => Sex.
-			(.+?):\s* # 2 => Name. But beware 'NAME (Text):'. And Text can contain ':'.
-				(     # 3 => Kind.
-				Anglicized|Breton|Contracted|Diminutive|Elaborated|
-				English\s+?and\s+?(?:French|German|Latin|Scottish)|
-				(?:(?:American|British)\s+?)?English|
-				Feminine|French|Irish\s+?Gaelic|
-				Latin|Latvian|Medieval\s+?English|Modern|
-				Old\s+?English|Pet|Polish|
-				Scottish(?:\s+Anglicized)?|Short|Slovak|Spanish|Unisex|
-				(?:V|v)ariant
-				)\s+?
-			((?:(?:adopted|contracted|diminutive|elaborated|feminine|pet|short|unisex|variant)?\s*?) # 4 => Form.
+			(.+?)\.\s            # 1 => Sex.
+			(.+?):\s*            # 2 => Name.
+			($sub_pattern_1)\s+? # 3 => Kind.
+			($sub_pattern_2)     # 4 => Form.
 			(?:equivalent|form|spelling|use)\s+?)
 			(?:of\s+?)?(.+?)\s+?(.+?)\s*?(?:,\s*?)?           # 5 => Source, 6 => Original.
 			(?:possibly\s+?)?meaning\s*?(?:simply\s*)?"(.+?)" # 7 => Meaning.
 			/x,
 		b => qr/
-			(.+?)\.\s # 1 => Sex.
-			(.+?):\s* # 2 => Name. But beware 'NAME (Text):'. And Text can contain ':'.
-				(     # 3 => Kind.
-				Anglicized|Breton|Contracted|Diminutive|Elaborated|
-				English\s+?and\s+?(?:French|German|Latin|Scottish)|
-				(?:(?:American|British)\s+?)?English|
-				Feminine|French|Irish\s+?Gaelic|
-				Latin|Latvian|Medieval\s+?English|Modern|
-				Old\s+?English|Pet|Polish|
-				Scottish(?:\s+Anglicized)?|Short|Slovak|Spanish|Unisex|
-				(?:V|v)ariant
-				)\s+?
+			(.+?)\.\s            # 1 => Sex.
+			(.+?):\s*            # 2 => Name.
+			($sub_pattern_1)\s+? # 3 => Kind.
 			(form)\s+?                                        # 4 => Form.
 			(?:of\s+?)(.+?\s+?.+?)\s+?(.+?)(?:,\s*?)?         # 5 => Source, 6 => Original.
 			(?:possibly\s+?)?meaning\s*?(?:simply\s*)?"(.+?)" # 7 => Meaning.
@@ -340,13 +337,6 @@ sub parse_derivations
 		if ($found)
 		{
 			$match_count++;
-
-			if ($name =~ /(?:ALLISTAIR|ANTONY)/)
-			{
-				$self -> log(debug => '-' x 50);
-				$self -> log(debug => "Pattern: $found");
-				$self -> log(debug => '-' x 50);
-			}
 		}
 		else
 		{
@@ -700,7 +690,7 @@ The regexps in sub parse_derivations() split each line of data/derivations.raw i
 
 =head3 Matches using pattern 'a'
 
-So, 'male. ALLISTAIR: Anglicized form of Scottish Gaelic Alastair, meaning "defender of mankind."' becomes the
+'male. ALLISTAIR: Anglicized form of Scottish Gaelic Alastair, meaning "defender of mankind."' becomes the
 hashref (with keys in alphabetical order):
 
 	{
@@ -713,7 +703,9 @@ hashref (with keys in alphabetical order):
 		source   => 'Scottish Gaelic',
 	}
 
-and, 'male. ANTONY: Variant spelling of English Anthony, possibly meaning "invaluable."' becomes:
+The derivation is:
+
+'male. ANTONY: Variant spelling of English Anthony, possibly meaning "invaluable."' becomes:
 
 	{
 		form     => 'spelling',
@@ -725,9 +717,28 @@ and, 'male. ANTONY: Variant spelling of English Anthony, possibly meaning "inval
 		source   => 'English',
 	}
 
+The derivation is:
+
 In each case the derivation is built by sub generate_derivation($item) as:
 
 	"$$item{kind} $$item{form} of $$item{source} $$item{original}: $$item{meaning}"
+
+=head3 Matches using pattern 'b'
+
+'female. ANTONIA: Feminine form of Roman Latin Antonius, possibly meaning "invaluable." In use by the English, Italians and Spanish. Compare with another form of Antonia.'
+becomes:
+
+	{
+		form     => 'form',
+		kind     => 'Feminine',
+		meaning  => 'invaluable',
+		name     => 'ANTONIA',
+		original => 'Anthony',
+		sex      => 'female',
+		source   => 'Roman Latin',
+	}
+
+The derivation is: Feminine form of Roman Latin Antonius: invaluable
 
 =head1 References
 
