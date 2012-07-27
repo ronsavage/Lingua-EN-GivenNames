@@ -177,8 +177,8 @@ sub import_derivations
 
 sub _parse_definition
 {
-	my($self, $match_count, $matched, $key, $pattern, $mis_match, $unparsable, $candidate) = @_;
-	my($match)  = 0;
+	my($self, $match_count, $matched, $key, $pattern, $unparsable, $candidate) = @_;
+	my($match) = 0;
 
 	my($derivation); # This is a temp var.
 	my($form);
@@ -227,33 +227,7 @@ sub _parse_definition
 		}
 	}
 
-	if ($match == 0)
-	{
-		# Rearrange $name so the actual name is at the end,
-		# and the prefix is 'notice: ...'.
-		# This means we can sort the output looking for patterns to match.
-
-		if ($candidate =~ /(.+?):\s*(.+)/s)
-		{
-			$name = "1: $2 | $1";
-		}
-		elsif ($candidate !~ /^[A-Z]{2,}/)
-		{
-			$name = "2: $candidate";
-		}
-		else
-		{
-			$name = "3: $candidate";
-		}
-
-		push @$mis_match, $name;
-	}
-	else
-	{
-		$$match_count++;
-
-		$self -> log(debug => $candidate) if ($self -> verbose > 1);
-	}
+	return $match;
 
 } # End of _parse_definition.
 
@@ -333,13 +307,47 @@ sub parse_derivations
 
 	my($match_count) = 0;
 
+	my($found);
 	my(@mis_match);
 
 	for my $name (@name)
 	{
+		$found = 0;
+
 		for my $key (sort keys %pattern)
 		{
-			last if ($self -> _parse_definition(\$match_count, \%matched, $key, $pattern{$key}, \@mis_match, \%unparsable, $name) );
+			if ($self -> _parse_definition(\$match_count, \%matched, $key, $pattern{$key}, \%unparsable, $name) )
+			{
+				$found = 1;
+
+				last;
+			}
+		}
+
+		if ($found)
+		{
+			$match_count++;
+		}
+		else
+		{
+			# Rearrange $name so the actual name is at the end,
+			# and the prefix is 'notice: ...'.
+			# This means we can sort the output looking for patterns to match.
+
+			if ($name =~ /(.+?):\s*(.+)/s)
+			{
+				$name = "1: $2 | $1";
+			}
+			elsif ($name !~ /^[A-Z]{2,}/)
+			{
+				$name = "2: $name";
+			}
+			else
+			{
+				$name = "3: $name";
+			}
+
+			push @mis_match, $name;
 		}
 	}
 
