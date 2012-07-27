@@ -1,6 +1,6 @@
 #!/bin/bash
 
-rm data/derivations.raw data/derivations.cooked data/mismatches.log data/parse.log
+rm data/derivations.raw data/derivations.csv data/mismatches.log data/parse.log
 
 for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20;
 do
@@ -20,3 +20,4 @@ mv $$.log data/mismatches.log
 perl -Ilib scripts/drop.tables.pl
 perl -Ilib scripts/create.tables.pl
 perl -Ilib scripts/import.derivations.pl -v 1
+perl -Ilib scripts/export.as.html.pl -w data/given.names.html -v 1

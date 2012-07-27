@@ -7,6 +7,8 @@ use strict;
 use warnings;
 use warnings qw(FATAL utf8);
 
+use Data::Dumper::Concise; # For Dumper().
+
 use DBI;
 
 use Encode; # For decode().
@@ -16,6 +18,8 @@ use File::Spec;
 use Hash::FieldHash ':all';
 
 use HTML::TreeBuilder;
+
+use IO::File;
 
 use Perl6::Slurp; # For slurp().
 
@@ -58,7 +62,10 @@ sub _extract_derivation_set
 		$_;
 	} $_ -> as_text for $root -> look_down(_tag => 'li');
 
-	@name = map{"$sex. $_"} @name;
+	# Skip add-one lines where name is like ADEN, and the lines are
+	# commentary in a stand-alone <ol> <li>1...</li> <li>2...</li> </ol> set.
+
+	@name = map{"$sex. $_"} grep {/^[A-Z][A-Z]/} @name;
 
 	$root -> delete();
 
@@ -122,25 +129,47 @@ sub import_derivations
 {
 	my($self)       = @_;
 	my($derivation) = $self -> read_derivations;
+	my($duplicate)  = 0;
 
 	# Build lists to store all tables except 'names'.
 	# Lastly, process the 'names' table.
 
-	for (@$derivation)
+	my(@derivation);
+	my($s, %seen);
+
+	for my $item (@$derivation)
 	{
-		$$_{derivation} = "$$_{kind} $$_{form} of $$_{source} $$_{original}: $$_{meaning}";
+		$s = "$$item{kind} $$item{form} of $$item{source} $$item{original}: $$item{meaning}";
+
+		if ($seen{$s})
+		{
+			$duplicate++;
+
+			$self -> log(debug => "Skipping duplicate: $$item{name}: $s");
+
+			next;
+		}
+
+		$seen{"$$item{name} $s"} = 1;
+		$$item{derivation}       = $s;
+
+		push @derivation, $item;
 	}
+
+	$self -> log(debug => "Skipping $duplicate duplicate derivations");
 
 	my($table_name) = $self -> table_names;
 
 	my(%foreign_key);
 
-	for my $table (grep{! /name/} keys %$table_name)
+	# The sort here is just to help debugging.
+
+	for my $table (sort grep{! /name/} keys %$table_name)
 	{
-		$foreign_key{$table} = $self -> write_table($$table_name{$table}, [map{$$_{$table} } @$derivation]);
+		$foreign_key{$table} = $self -> write_table($$table_name{$table}, [map{$$_{$table} } @derivation]);
 	}
 
-	$self -> write_names($$table_name{name}, $derivation, \%foreign_key);
+	$self -> write_names($$table_name{name}, \@derivation, \%foreign_key);
 
 } # End of import_derivations.
 
@@ -148,7 +177,7 @@ sub import_derivations
 
 sub _parse_definition
 {
-	my($self, $match_count, $matched, $pattern, $mis_match, $unparsable, $candidate) = @_;
+	my($self, $match_count, $matched, $key, $pattern, $mis_match, $unparsable, $candidate) = @_;
 	my($match)  = 0;
 
 	my($derivation); # This is a temp var.
@@ -159,36 +188,33 @@ sub _parse_definition
 	my($original);
 	my($sex, $source);
 
-	for my $key (keys %$pattern)
+	if ($candidate =~ $pattern)
 	{
-		if ($candidate =~ $$pattern{$key})
+		$form     = $4 || '';
+		$kind     = $3;
+		$meaning  = $7;
+		$name     = $2;
+		$original = $6;
+		$sex      = $1;
+		$source   = $5;
+
+		# Warning: These must follow all the assignments above,
+		# because they reset $1 .. $7.
+
+		$form       =~ s/\s$//;
+		$meaning    =~ s/[,.]$//;
+		$meaning    =~ s/^\s//;
+		$name       =~ s/\s+\(.+\)//;
+		$derivation = "$name: $sex. $kind $form of $source $original: $meaning";
+
+		# Skip freaks which trick my 'parser'.
+
+		if ($$unparsable{$name})
 		{
-			$form     = $4 || '';
-			$kind     = $3;
-			$meaning  = $7;
-			$name     = $2;
-			$original = $6;
-			$sex      = $1;
-			$source   = $5;
-
-			# Warning: These must follow all the assignments above,
-			# because they reset $1 .. $7.
-
-			$form       =~ s/\s$//;
-			$meaning    =~ s/[,.]$//;
-			$meaning    =~ s/^\s//;
-			$name       =~ s/\s+\(.+\)//;
-			$derivation = "$name: $sex. $kind $form of $source $original: $meaning";
-
-			# Skip junk by hex and freaks which trick my 'parser'.
-
-			if ( ($derivation =~ /(?:\xc3|\xc5)/) || $$unparsable{$name})
-			{
-				$self -> log(notice => "Ignoring candidate $candidate");
-
-				next;
-			}
-
+			$self -> log(notice => "Ignoring candidate $candidate");
+		}
+		else
+		{
 			$match = 1;
 
 			push @{$$matched{$key}{form} },       $form;
@@ -255,8 +281,6 @@ sub parse_derivations
 
 	@unparsable{@unparsable} = (1) x @unparsable;
 
-	my(%matched);
-
 	my(%pattern) =
 	(
 		a => qr/
@@ -272,9 +296,26 @@ sub parse_derivations
 				Scottish(?:\s+Anglicized)?|Short|Slovak|Spanish|Unisex|
 				(?:V|v)ariant
 				)\s+?
-			((?:(?:adopted|contracted|diminutive|elaborated|feminine|form|pet|short|unisex|variant)?\s*?) # 4 => Form.
-			(?:equivalent|form|spelling|use)\s+?)?
+			((?:(?:adopted|contracted|diminutive|elaborated|feminine|pet|short|unisex|variant)?\s*?) # 4 => Form.
+			(?:equivalent|form|spelling|use)\s+?)
 			(?:of\s+?)?(.+?)\s+?(.+?)\s*?(?:,\s*?)?           # 5 => Source, 6 => Original.
+			(?:possibly\s+?)?meaning\s*?(?:simply\s*)?"(.+?)" # 7 => Meaning.
+			/x,
+		b => qr/
+			(.+?)\.\s # 1 => Sex.
+			(.+?):\s* # 2 => Name. But beware 'NAME (Text):'. And Text can contain ':'.
+				(     # 3 => Kind.
+				Anglicized|Breton|Contracted|Diminutive|Elaborated|
+				English\s+?and\s+?(?:French|German|Latin|Scottish)|
+				(?:(?:American|British)\s+?)?English|
+				Feminine|French|Irish\s+?Gaelic|
+				Latin|Latvian|Medieval\s+?English|Modern|
+				Old\s+?English|Pet|Polish|
+				Scottish(?:\s+Anglicized)?|Short|Slovak|Spanish|Unisex|
+				(?:V|v)ariant
+				)\s+?
+			(form)\s+?                                        # 4 => Form.
+			(?:of\s+?)(.+?\s+?.+?)\s+?(.+?)(?:,\s*?)?         # 5 => Source, 6 => Original.
 			(?:possibly\s+?)?meaning\s*?(?:simply\s*)?"(.+?)" # 7 => Meaning.
 			/x,
 	);
@@ -282,6 +323,8 @@ sub parse_derivations
 
 	# Values captured by the above regexp are stored in a set of arrayrefs.
 	# The arrayref $matched{$key}{derivation} is not used.
+
+	my(%matched);
 
 	for my $key (keys %pattern)
 	{
@@ -292,14 +335,19 @@ sub parse_derivations
 
 	my(@mis_match);
 
-	$self -> _parse_definition(\$match_count, \%matched, \%pattern, \@mis_match, \%unparsable, $_) for @name;
+	for my $name (@name)
+	{
+		for my $key (sort keys %pattern)
+		{
+			last if ($self -> _parse_definition(\$match_count, \%matched, $key, $pattern{$key}, \@mis_match, \%unparsable, $name) );
+		}
+	}
 
 	my($mismatch_count) = scalar @name - $match_count;
 
 	$self -> log(debug => "Target count: " . scalar @name . ". Match count: $match_count. Mis-match count: $mismatch_count");
 
-	my($csv)               = Text::CSV -> new({binary => 1});
-	my($derived_file_name) = File::Spec -> catfile($self -> data_dir, 'derivations.csv');
+	my($csv) = Text::CSV -> new({binary => 1});
 
 	my(@column);
 	my(@row);
@@ -323,13 +371,11 @@ sub parse_derivations
 		}
 	}
 
+	my($derived_file_name) = File::Spec -> catfile($self -> data_dir, 'derivations.csv');
+
 	open(OUT, '>>', $derived_file_name) || die "Can't open($derived_file_name): $!\n";
 	binmode OUT;
-	die "Can't combine headers into a CSV string\n" if (! $csv -> combine(sort grep{! /derivation/} keys %$table_name) );
-	print OUT $csv -> string, "\n";
-
-	print '-' x 50, "\n", $csv -> string, "\n", '-' x 50, "\n";
-
+	print OUT join(',', sort grep{! /derivation/} keys %$table_name), "\n";
 	print OUT map{"$_\n"} @row;
 	close OUT;
 
@@ -354,68 +400,54 @@ sub parse_derivations
 
 } # End of parse_derivations.
 
+# -----------------------------------------------
+
+sub read_csv_file
+{
+	my($self, $file_name) = @_;
+	my($csv) = Text::CSV -> new({allow_whitespace => 1, binary => 1});
+	my($io)  = IO::File -> new($file_name, 'r');
+
+	$csv -> column_names($csv -> getline($io) );
+
+	return $csv -> getline_hr_all($io);
+
+} # End of read_csv_file.
+
 # ----------------------------------------------
 
 sub read_derivations
 {
 	my($self)      = @_;
 	my($file_name) = File::Spec -> catfile($self -> data_dir, 'derivations.csv');
-
-	# This produces an erroneous result.
-	# my(@line)      = slurp '< :raw', $file_name, {chomp => 1};
-
-	open(INX, '<', $file_name);
-	binmode INX;
-	my(@line) = <INX>;
-	close INX;
-	chomp @line;
-
-	my($previous)  = '';
+	my($line)      = $self -> read_csv_file($file_name);
 	my($count)     = 0;
 
-	$self -> log(debug => "Processing $file_name. Derivation count: " . scalar @line);
+	$self -> log(debug => "File: $file_name. Derivation count: " . scalar @$line);
 
-	my(%derivation, @derivation);
+	my(%derivation);
 
-	for my $line (@line)
+	for my $field (@$line)
 	{
-		# Just in case we find a duplication.
-		# This assumes the input is sorted.
-
-		if ($line eq $previous)
-		{
-			$self -> log(notice => "Skipping duplicate line: $line");
-
-			next;
-		}
-
-		# Expected input:
-		# form: spelling. kind: Variant. meaning: light-bringer. name: AARAN. original: Aaron. sex: male. source: English.
-
-		my(%field) = $line =~ /(.+?)\: ([^.]+?)\.\s/g;
-		$previous  = $line;
-
-		# Prepare to validate.
-
-		for my $key (keys %field)
-		{
-			die "Input file: $file_name. Cannot parse: <$line>. \n" if (length($field{$key}) == 0);
-
-			$derivation{$key}                = {} if (! $derivation{$key});
-			$derivation{$key}{$field{$key} } = 1;
-		}
-
 		$count++;
 
-		push @derivation, {%field};
+		for my $key (keys %$field)
+		{
+			if (! $$field{$key})
+			{
+				$self -> log(debug => join(', ', map{"$_ => $$field{$_}"} sort keys %$field) );
 
-		$self -> log(debug => "$count: " . join('. ', map{"$_ => $field{$_}"} sort keys %field) ) if ($self -> verbose > 1);
+				die "$count: Missing value for key $key";
+			}
+
+			$derivation{$key}                 = {} if (! $derivation{$key});
+			$derivation{$key}{$$field{$key} } = 1;
+		}
 	}
 
-	$self -> log(debug => "Found $count unique derivations");
 	$self -> validate_derivations($file_name, \%derivation);
 
-	return \@derivation;
+	return \@$line;
 
 } # End of read_derivations.
 

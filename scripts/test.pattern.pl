@@ -8,29 +8,32 @@ use warnings qw(FATAL utf8);
 
 # -----------------------------------------------
 
-my($s) = join(' ', @ARGV);
+#my($s) = join(' ', @ARGV);
 
-say 'Testing: <', join('> <', split(/\s+/, $s) ), '>';
+my($s) = 'female. BEVIN: Anglicized form of Irish Gaelic Béibhinn, meaning "fair lady."';
 
-# CATHY: English pet form of French Catharine, meaning "pure."
+say $s;
 
 if ($s =~	/
-			(.+?):\s* # 1
-				(     # 2
+			(.+?)\.\s # 1 => Sex.
+			(.+?):\s* # 2 => Name. But beware 'NAME (Text):'. And Text can contain ':'.
+				(     # 3 => Kind.
 				Anglicized|Breton|Contracted|Diminutive|Elaborated|
-				English\s+?and\s+?Latin|
+				English\s+?and\s+?(?:French|German|Latin|Scottish)|
 				(?:(?:American|British)\s+?)?English|
-				Feminine|French|Irish\s+?Gaelic|Latin|Medieval\s+?English|Old\s+?English|
-				Pet|Polish|Scottish(?:\s+Anglicized)|Short|Unisex|
+				Feminine|French|Irish\s+?Gaelic|
+				Latin|Latvian|Medieval\s+?English|Modern|
+				Old\s+?English|Pet|Polish|
+				Scottish(?:\s+Anglicized)?|Short|Slovak|Spanish|Unisex|
 				(?:V|v)ariant
 				)\s+?
-			((?:(?:contracted|feminine|pet|short|unisex|variant)?\s*?)(?:form|spelling)\s+?) # 3
-			(?:of\s+?)?(.+?)\s+?(.+?)\s*?(?:,\s*?)? # 4, 5
-			(?:possibly\s+?)?meaning\s*?(?:simply\s*)?"(.+?)" # 6
-			/x
+			(form)\s+?                                        # 4 => Form.
+			(?:of\s+?)(.+?\s+?.+?)\s+?(.+?)(?:,\s*?)?         # 5 => Source, 6 => Original.
+			(?:possibly\s+?)?meaning\s*?(?:simply\s*)?"(.+?)" # 7 => Meaning.
+			/x,
 	)
 {
-	say "Name: <$1>. Kind: <$2>. Style: <$3>. Source: <$4>. Original: <$5>. Meaning: <$6>.";
+	say "Sex: <$1>. Name: <$2>. Kind: <$3>. Form: <$4>. Source: <$5>. Original: <$6>. Meaning: <$7>.";
 }
 else
 {

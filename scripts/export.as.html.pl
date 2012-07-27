@@ -22,8 +22,8 @@ if ($option_parser -> getoptions
 (
 	\%option,
 	'help',
-	'output_file=s',
 	'verbose=s',
+	'web_page_file=s',
 ) )
 {
 	pod2usage(1) if ($option{'help'});
@@ -49,8 +49,8 @@ export.as.html.pl [options]
 
 	Options:
 	-help
-	-output_file $aFileName
 	-verbose $integer
+	-web_page_file $aFileName
 
 All switches can be reduced to a single letter.
 
@@ -68,12 +68,6 @@ Default output: Screen.
 
 Print help and exit.
 
-=item o -output_file $aFileName
-
-A HTML file name, to which given name data is to be output.
-
-Default: given.names.html
-
 =item o -verbose $integer
 
 Print more or less progress reports. Details (more-or-less):
@@ -84,6 +78,12 @@ Print more or less progress reports. Details (more-or-less):
 	3: The kinds of subcountries encountered. See comments in code re 'verbose > 2'.
 
 Default: 0.
+
+=item o -web_page_file $aFileName
+
+A HTML file name, to which given name data is to be output.
+
+Default: given.names.html
 
 =back
 
