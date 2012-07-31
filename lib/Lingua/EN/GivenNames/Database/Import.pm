@@ -196,15 +196,17 @@ sub _parse_definition
 	my($meaning);
 	my($name);
 	my($original);
+	my($rating);
 	my($sex, $source);
 
 	if ($candidate =~ $pattern)
 	{
 		$form     = $4 || '';
 		$kind     = $3;
-		$meaning  = $7;
+		$meaning  = $8;
 		$name     = $2;
 		$original = $6;
+		$rating   = $7;
 		$sex      = $1;
 		$source   = $5;
 
@@ -215,7 +217,8 @@ sub _parse_definition
 		$meaning    =~ s/[,.]$//;
 		$meaning    =~ s/^\s//;
 		$name       =~ s/\s+\(.+\)//;
-		$derivation = "$name: $sex. $kind $form of $source $original: $meaning";
+		$rating     =~ s/\s$//;
+		$derivation = "$name: $sex. $kind $form of $source $original - $rating: $meaning";
 
 		# Skip freaks which trick my 'parser'.
 
@@ -232,6 +235,7 @@ sub _parse_definition
 			push @{$$matched{$key}{meaning} },    $meaning;
 			push @{$$matched{$key}{name} },       $name;
 			push @{$$matched{$key}{original} },   $original;
+			push @{$$matched{$key}{rating} },     $rating;
 			push @{$$matched{$key}{sex} },        $sex;
 			push @{$$matched{$key}{source} },     $source;
 		}
@@ -293,7 +297,8 @@ EOS
 			(?:equivalent|form|spelling|use)\s+?)
 			(?:of\s+?)?(.+?)\s+? # 5 => Source.
 			(.+?)\s*?(?:,\s*?)?  # 6 => Original.
-			(?:possibly\s+?)?meaning\s*?(?:simply\s*)?"(.+?)" # 7 => Meaning.
+			((?:possibly\s+?)?meaning\s*?(?:simply\s*)?) # 7 => Rating.
+			"(.+?)" # 8 => Meaning.
 			/x,
 		b => qr/
 			(.+?)\.\s            # 1 => Sex.
@@ -302,7 +307,8 @@ EOS
 			(form)\s+?                 # 4 => Form.
 			(?:of\s+?)(.+?\s+?.+?)\s+? # 5 => Source.
 			(.+?)(?:,\s*?)?            # 6 => Original.
-			(?:possibly\s+?)?meaning\s*?(?:simply\s*)?"(.+?)" # 7 => Meaning.
+			((?:possibly\s+?)?meaning\s*?(?:simply\s*)?) # 7 => Rating.
+			"(.+?)" # 8 => Meaning.
 			/x,
 	);
 	my($table_name) = $self -> table_names;
@@ -485,6 +491,7 @@ sub table_names
 		meaning    => 'meanings',
 		name       => 'names',
 		original   => 'originals',
+		rating     => 'ratings',
 		sex        => 'sexes',
 		source     => 'sources',
 	};
@@ -534,7 +541,7 @@ sub write_names
 	$self -> dbh -> do("delete from $$table_name{name}");
 
 	my($i)   = 0;
-	my($sql) = "insert into $$table_name{name} (derivation_id, form_id, kind_id, meaning_id, original_id, sex_id, source_id, fc_name, name) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	my($sql) = "insert into $$table_name{name} (derivation_id, form_id, kind_id, meaning_id, original_id, rating_id, sex_id, source_id, fc_name, name) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	my($sth) = $self -> dbh -> prepare($sql) || die "Unable to prepare SQL: $sql\n";
 
 	my($name);
@@ -546,7 +553,7 @@ sub write_names
 
 		$name = decode('utf8', ucfirst lc $$item{name});
 
-		@record = ($$item{derivation}, $$item{form}, $$item{kind}, $$item{meaning}, $$item{original}, $$item{sex}, $$item{source}, fc $name, $name);
+		@record = ($$item{derivation}, $$item{form}, $$item{kind}, $$item{meaning}, $$item{original}, $$item{rating}, $$item{sex}, $$item{source}, fc $name, $name);
 
 		$self -> log(debug => join(', ', @record) ) if ($self -> verbose > 1);
 

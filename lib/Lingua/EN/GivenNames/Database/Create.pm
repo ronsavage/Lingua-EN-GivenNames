@@ -25,6 +25,7 @@ forms
 kinds
 meanings
 originals
+ratings
 sexes
 sources
 names
@@ -135,6 +136,7 @@ form_id integer not null references forms(id),
 kind_id integer not null references kinds(id),
 meaning_id integer not null references meanings(id),
 original_id integer not null references originals(id),
+rating_id integer not null references ratings(id),
 sex_id integer not null references sexes(id),
 source_id integer not null references sources(id),
 fc_name varchar(255) not null,
@@ -165,6 +167,26 @@ SQL
 	$self -> report($table_name, 'created', $result);
 
 }	# End of create_originals_table.
+
+# --------------------------------------------------
+
+sub create_ratings_table
+{
+	my($self)        = @_;
+	my($table_name)  = 'ratings';
+	my($primary_key) = $self -> creator -> generate_primary_key_sql($table_name);
+	my($engine)      = $self -> engine;
+	my($result)      = $self -> creator -> create_table(<<SQL);
+create table $table_name
+(
+id $primary_key,
+fc_name varchar(255) not null,
+name varchar(255) not null
+) $engine
+SQL
+	$self -> report($table_name, 'created', $result);
+
+}	# End of create_ratings_table.
 
 # --------------------------------------------------
 
@@ -218,6 +240,7 @@ sub drop_all_tables
 names
 sources
 sexes
+ratings
 originals
 meanings
 kinds

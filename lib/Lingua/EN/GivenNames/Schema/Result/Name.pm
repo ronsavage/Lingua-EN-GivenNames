@@ -59,6 +59,12 @@ __PACKAGE__->table("names");
   is_foreign_key: 1
   is_nullable: 0
 
+=head2 rating_id
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 0
+
 =head2 sex_id
 
   data_type: 'integer'
@@ -103,6 +109,8 @@ __PACKAGE__->add_columns(
   "meaning_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "original_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+  "rating_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "sex_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
@@ -209,6 +217,21 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
+=head2 rating
+
+Type: belongs_to
+
+Related object: L<Lingua::EN::GivenNames::Schema::Result::Rating>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "rating",
+  "Lingua::EN::GivenNames::Schema::Result::Rating",
+  { id => "rating_id" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+);
+
 =head2 sex
 
 Type: belongs_to
@@ -240,8 +263,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07015 @ 2012-07-26 13:46:23
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:faVVBJpvpEpUNO4GMgjZ+Q
+# Created by DBIx::Class::Schema::Loader v0.07015 @ 2012-07-31 17:18:59
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:4CVPRp5JNRyZxaBVh4lPhA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

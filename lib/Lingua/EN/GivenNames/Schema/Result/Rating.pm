@@ -1,12 +1,12 @@
 use utf8;
-package Lingua::EN::GivenNames::Schema::Result::Meaning;
+package Lingua::EN::GivenNames::Schema::Result::Rating;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-Lingua::EN::GivenNames::Schema::Result::Meaning
+Lingua::EN::GivenNames::Schema::Result::Rating
 
 =cut
 
@@ -15,11 +15,11 @@ use warnings;
 
 use base 'DBIx::Class::Core';
 
-=head1 TABLE: C<meanings>
+=head1 TABLE: C<ratings>
 
 =cut
 
-__PACKAGE__->table("meanings");
+__PACKAGE__->table("ratings");
 
 =head1 ACCESSORS
 
@@ -77,13 +77,13 @@ Related object: L<Lingua::EN::GivenNames::Schema::Result::Name>
 __PACKAGE__->has_many(
   "names",
   "Lingua::EN::GivenNames::Schema::Result::Name",
-  { "foreign.meaning_id" => "self.id" },
+  { "foreign.rating_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
 
 # Created by DBIx::Class::Schema::Loader v0.07015 @ 2012-07-31 17:18:59
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:LEg+VJEWs3mK+as204SHFw
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Nzzo/d4bsH7N5NrPOskniQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

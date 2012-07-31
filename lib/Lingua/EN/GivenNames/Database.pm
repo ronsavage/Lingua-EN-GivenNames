@@ -113,6 +113,7 @@ sub read_names_table
 			meaning    => $result -> meaning -> name,
 			name       => $result -> name,
 			original   => $result -> original -> name,
+			rating     => $result -> rating -> name,
  			sex        => $result -> sex -> name,
 			source     => $result -> source -> name,
 		};
