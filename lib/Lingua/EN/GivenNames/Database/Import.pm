@@ -291,15 +291,17 @@ EOS
 			($sub_pattern_1)\s+? # 3 => Kind.
 			($sub_pattern_2)     # 4 => Form.
 			(?:equivalent|form|spelling|use)\s+?)
-			(?:of\s+?)?(.+?)\s+?(.+?)\s*?(?:,\s*?)?           # 5 => Source, 6 => Original.
+			(?:of\s+?)?(.+?)\s+? # 5 => Source.
+			(.+?)\s*?(?:,\s*?)?  # 6 => Original.
 			(?:possibly\s+?)?meaning\s*?(?:simply\s*)?"(.+?)" # 7 => Meaning.
 			/x,
 		b => qr/
 			(.+?)\.\s            # 1 => Sex.
 			(.+?):\s*            # 2 => Name.
 			($sub_pattern_1)\s+? # 3 => Kind.
-			(form)\s+?                                        # 4 => Form.
-			(?:of\s+?)(.+?\s+?.+?)\s+?(.+?)(?:,\s*?)?         # 5 => Source, 6 => Original.
+			(form)\s+?                 # 4 => Form.
+			(?:of\s+?)(.+?\s+?.+?)\s+? # 5 => Source.
+			(.+?)(?:,\s*?)?            # 6 => Original.
 			(?:possibly\s+?)?meaning\s*?(?:simply\s*)?"(.+?)" # 7 => Meaning.
 			/x,
 	);
