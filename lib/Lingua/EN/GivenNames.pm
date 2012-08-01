@@ -80,7 +80,7 @@ sub new
 
 =head1 NAME
 
-Lingua::EN::GivenNames - SQLite database of derivations of given names
+Lingua::EN::GivenNames - SQLite database of derivations of English given names
 
 =head1 Synopsis
 
@@ -88,12 +88,15 @@ www.20000-names.com I<has been scraped>. You do not need to run the script which
 
 Just use the SQLite database shipped with this module, as discussed next.
 
-=head2 Methods which return hashrefs
+=head2 Basic Usage
 
 	use Lingua::EN::GivenNames::Database;
 
 	my($database) = Lingua::EN::GivenNames::Database -> new;
-	my($names)    = $database -> read_names_table; # $names is an arrayref of hashrefs.
+
+	# $names is an arrayref of hashrefs.
+
+	my($names) = $database -> read_names_table;
 
 Each element in @$names contains data for 1 record in the database, and has these keys
 (in alphabetical order):
@@ -107,15 +110,12 @@ Each element in @$names contains data for 1 record in the database, and has thes
 		meaning    => Foreign key into meanings table,
 		name       => The name,
 		original   => Foreign key into originals table,
-		rating     => Foreign key into ratingss table,
+		rating     => Foreign key into ratings table,
 		sex        => Foreign key into sexes table,
 		source     => Foreign key into sources table,
 	}
 
-=head3 Notes
-
-In the case of the I<names> table, the primary key is the name's id.
-See L</What is the database schema?> for details.
+See L</FAQ> entries for details.
 
 =head2 Scripts which output to a file
 
@@ -123,8 +123,8 @@ All scripts respond to the -h option.
 
 Some examples:
 
-	shell>perl scripts/export.as.csv.pl -c given.names.csv
-	shell>perl scripts/export.as.html.pl -w given.names.html
+	shell>perl scripts/export.as.csv.pl  -cvs_file      given.names.csv
+	shell>perl scripts/export.as.html.pl -web_page_file given.names.html
 
 This file is on-line at: L<http://savage.net.au/Perl-modules/html/Lingua/EN/GivenNames/given.names.html>.
 
@@ -140,57 +140,6 @@ The pages have already been downloaded, so that phase only needs to be run when 
 Likewise, the data has been imported.
 
 This means you would normally only ever use the database in read-only mode.
-
-Scripts shipped with this distro are:
-
-=over 4
-
-=item o scripts/get.name.pages.pl
-
-1: Downloads the sets of male and female names from 20000-names.com.
-
-Output: data/*.htm.
-
-=item o scripts/extract.derivations.pl
-
-Extracts the individual name derivations from the downloaded web pages.
-
-inputs: data/*.htm.
-
-Output: data/derivations.raw.
-
-=item o scripts/parse.derivations.pl
-
-Input: data/derivations.raw.
-
-Output: data/matches.log, data/mismatches.log and data/parse.log.
-
-=item o scripts/import.derivations.pl
-
-Input: data/matches.log.
-
-Output: share/lingua.en.givennames.sqlite.
-
-Note: When the distro is installed, this SQLite file is installed too.
-See L</Where is the database?> for details.
-
-=item o scripts/export.as.csv.pl -g data/given.names.csv
-
-Exports the name data as CSV.
-
-Input: share/lingua.en.givennames.sqlite.
-
-Output: data/names.csv.
-
-=item o scripts/export.as.html -w data/given.names.html
-
-Input: share/lingua.en.givennames.sqlite.
-
-Output: data/given.names.html.
-
-On-line: L<http://savage.net.au/Perl-modules/html/Locale/GivenNames/en/given.names.html>.
-
-=back
 
 =head1 Constructor and initialization
 
@@ -302,11 +251,18 @@ It is shipped in share/lingua.en.givennames.sqlite.
 It is installed into the distro's shared dir, as returned by L<File::ShareDir/dist_dir()>.
 On my machine that's:
 
-/home/ron/perl5/perlbrew/perls/perl-5.14.2/lib/site_perl/5.14.2/auto/share/dist/Locale-GivenNames-en/lingua.en.givennames.sqlite.
+/home/ron/perl5/perlbrew/perls/perl-5.14.2/lib/site_perl/5.14.2/auto/share/dist/Lingua-EN-GivenNames/lingua.en.givennames.sqlite.
+
+=head2 Where is the config file?
+
+It is shipped in share/.ht.lingua.en.givennames.conf.
+
+It is installed into the distro's shared dir, along with the database.
 
 =head2 What is the database schema?
 
-The table names are: forms, kinds, meanings, names, originals, sexes, sources, which names being the main table.
+The table names are: forms, kinds, meanings, names, originals, ratings, sexes and sources,
+with names being the main table.
 
 =head2 What do I do if I find a mistake in the data?
 
@@ -314,9 +270,77 @@ What data? What mistake? How do you know it's wrong?
 
 Also, you must decide what exactly you were expecting the data to be.
 
-The input data is partially free-form, as per the original web pages, and commentry like that I<is impossible to
-parse perfectly with regexps>. So, perhaps the solution lies in making the regexps in
-L<Lingua::EN::GivenNames::Database::Import> smarter. Patches welcome.
+Firstly, report your claim to the webmaster at L<20000-names.com>.
+
+Note: The input data is partially free-form, as per the original web pages, and commentary
+as used on those pages I<is impossible to parse perfectly with regexps>.
+
+So, perhaps the solution lies in making the regexps in L<Lingua::EN::GivenNames::Database::Import> smarter.
+
+Another possibility is to pre-process one or both of the input files data/derivations.raw and
+data/derivations.csv before they are processed. The next question discusses how to intervene in the
+data flow.
+
+=head2 How do the scripts and modules interact to produce the data?
+
+Recall from above that the web site L<20000-names.com> I<has been scraped>. The output files from that
+step are in data/*.htm.
+
+The database tables are created with:
+
+	scripts/drop.tables.pl (if necessary)
+	scripts/create.tables.pl
+
+Then the data is processed with:
+
+	Input files: data/*.htm
+	Reader:      scripts/extract.derivations.pl
+	Output file: data/derivations.raw
+	Reader:      scripts/parse.derivations.pl
+	Output file: data/derivations.csv
+	Reader:      scripts/import.derivations.pl
+	Output file: share/lingua.en.givennames.sqlite (when $ENV{AUTHOR_TESTING} == 1)
+	Reader:      scripts/export.as.html.pl
+	Output file: data/given.names.html
+
+Scripts (in alphabetical order):
+
+=over 4
+
+=item o scripts/export.as.csv.pl and scripts.export.as.html.pl
+
+The obviously read the database and output the expected data. They use
+L<Lingua::EN::GivenNames::Database::Export>.
+
+=item o scripts/extract.derivations.pl
+
+This script is run once each for 20 pages of female names and once each for 17 pages of male names.
+It uses L<Lingua::EN::GivenNames::Database::Import>.
+
+=item o scripts/get.name.pages.pl
+
+This script is run once to get 20 pages of female names and once to get 17 pages of male names.
+It uses L<Lingua::EN::GivenNames::Database::Download>.
+
+=item o scripts/import.derivations.pl
+
+This scripts actually writes the database tables. It uses L<Lingua::EN::GivenNames::Database::Import>.
+
+=item o scripts/import.sh
+
+That sequence of commands (above) is performed by scripts/import.sh.
+
+=item o scripts/parse.derivations.pl
+
+Besides outputting data/derivations.csv, this script also outputs data/mismatches.log and
+data/parse.log. It uses L<Lingua::EN::GivenNames::Database::Import>.
+
+=item o scripts/test.pattern.pl
+
+This is code I use to test new regexps before putting them into production in sub parse_derivations()
+in L<Lingua::EN::GivenNames::Database::Import>.
+
+=back
 
 =head2 What is $ENV{AUTHOR_TESTING} used for?
 
@@ -324,7 +348,7 @@ When this env var is 1, scripts output to share/*.sqlite within the distro's dir
 database tables. After installation, the database is elsewhere, and read-only, so you don't want the scripts
 writing to that copy anyway.
 
-At run-time, L<File::ShareDir> is used to find the installed version of *.sqlite.
+After end-user installation, L<File::ShareDir> is used to find the installed version of *.sqlite.
 
 =head1 References
 
