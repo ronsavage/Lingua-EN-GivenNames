@@ -2690,6 +2690,7 @@ form,Anglicized,"""brown warrior""",DINIS,"Gaelic Donnchadh",meaning,male,Irish
 form,Anglicized,"""a species of gazelle"" or ""a thresher""",DISHAN,Diyshan,meaning,male,Hebrew
 form,Anglicized,"""sunset""",DISMAS,Dysmas,meaning,male,Greek
 "pet form",Medieval,"""bright fame""",DOB,Robert,meaning,male,English
+"pet form",Old,"""famous spear""",DODGE,Rodger,meaning,male,English
 form,Short,"""noble wolf""",DOLPH,Adolph,meaning,male,English
 form,Short,"""belongs to the lord""",DOM,Dominic,meaning,male,English
 spelling,Variant,"""belongs to the lord""",DOMENIC,Dominic,meaning,male,English
@@ -3445,7 +3446,6 @@ form,"Medieval English","""dark-skinned; Moor""",MORRIS,"Latin Maurice",meaning,
 form,Anglicized,"""mariner, seaman."" English surname transferred to forename use, from the Norman baronial name Mortemer, composed of the Old French elements morte ""dead"" and mer ""sea,"" hence ""dead sea""",MORTIMER,"Gaelic Muiriartach",meaning,male,Irish
 form,Short,"""drawn out""",MOSE,Moses,meaning,male,English
 form,Anglicized,"""drawn out""",MOSES,"Moshe and Greek Mouses",meaning,male,Hebrew
-form,Italian,"""drawn out""","MOSÈ",Moses,meaning,male,English
 form,Pet,"""sea warrior""",MURDANIE,Murdoch,meaning,male,English
 form,Pet,"""sea warrior""",MURDIE,Murdoch,meaning,male,English
 form,Pet,"""sea warrior""",MURDO,Murdoch,meaning,male,English
@@ -3863,6 +3863,7 @@ form,Anglicized,"""wide and slow-flowing river""",WAINAMOINEN,Väinämöinen,mea
 spelling,Variant,"""foreigner, stranger""",WALLIS,Wallace,meaning,male,English
 form,Short,"""ruler of the army""",WALT,Walter,meaning,male,English
 form,English,"""ruler of the army""",WALTER,Walther,meaning,male,German
+"pet form",Old,"""ruler of the army""",WAT,Walter,meaning,male,English
 form,English,"""war territory"" or ""battlefield""",WAYLAND,Wieland,meaning,male,German
 form,Short,"""will""",WIL,"English names beginning with Wil-",meaning,male,Old
 spelling,Variant,"""wild boar""",WILBUR,"English Wilber",meaning,male,Middle
@@ -3924,3 +3925,44 @@ form,Anglicized,"""celebrated in song""",ZIMRI,Zimriy,meaning,male,Hebrew
 form,Anglicized,"""sunny or parched place""",ZION,Tsiyown,meaning,male,Hebrew
 form,Anglicized,"""flow, overflow,"" hence ""honey as dropping""",ZOPHAI,Tsuwph,meaning,male,Hebrew
 form,Anglicized,"""flow, overflow,"" hence ""honey as dropping""",ZUPH,Tsuwph,meaning,male,Hebrew
+form,Short,"""noble sort,"" and Adela ""noble""",ADA,Adelaide,meaning,female,English
+form,Pet,"""chaste,"" and Latin Agatha, ""good""",AGGIE,Agnes,meaning,female,English
+form,Feminine,"""son of Ansel,"" or ""son of Agnes""",ANSONIA,"Anson, originally a patronymic surname which may have come from any of a number of Middle English names, for instance",meaning,female,English
+form,English,"""Grail heroine""",DANDRANE,"Danbrann, the Arthurian legend name of the sister of Percival, sometimes known as the",meaning,female,Welsh
+form,Short,"""blossoming"" and Latin Flora ""flower""",FLO,Florence,meaning,female,English/French
+form,Feminine,"""J""",JAYLA,"Jay, a short form of longer names beginning with the letter",meaning,female,English
+form,Feminine,"""J""",JAYLEE,"Jay, a short form of longer names beginning with the letter",meaning,female,English
+form,Anglicized,"""Ba'al exalts,"" ""unchaste,"" or ""without cohabitation"") and Greek Iezabel (""chaste, intact""",JEZEBEL,"Iyzebel (",meaning,female,Hebrew
+form,Short,"""K""",KAY,"beginning with the letter",meaning,female,names
+form,Pet,"""obstinacy, rebelliousness"" or ""their rebellion,"" and Margaret ""pearl""",MAMIE,Mary,meaning,female,English
+form,Elaborated,"""pearl"" and Mary ""obstinacy, rebelliousness"" or ""their rebellion""",MAYRA,"May, a pet form of English Margaret",meaning,female,English
+form,Diminutive,"""favor; grace""), hence ""little favorable one"" or ""little graceful one""",NANETTE,"Nan (",meaning,female,English
+form,Short,"""cautious"" and Prunella ""little prune""",PRU,Prudence,meaning,female,English
+form,Short,"""cautious"" and Prunella ""little prune""",PRUE,Prudence,meaning,female,English
+form,Feminine,"""king""), hence ""queen""",REXANNE,"Rex (",meaning,female,English
+form,Anglicized,"""appearance"" or ""friendship"") and Greek Rhouth (""a female friend""",RUTH,"Ruwth (",meaning,female,Hebrew
+form,"Middle English","""noble guard"" or Ælfweard ""elf guard""",AYLWARD,"Æthelweard",meaning,male,Anglo-Saxon
+form,Short,"""son of the right hand"" and Benedict ""blessed""",BEN,Benjamin,meaning,male,English
+form,Pet,"""son of the right hand"" and Benedict ""blessed""",BENNIE,Benjamin,meaning,male,English
+form,Pet,"""son of the right hand"" and Benedict ""blessed""",BENNY,Benjamin,meaning,male,English
+form,Anglicized,"""acquired, possessed"") and Greek Kaïn (""maker; fabricator"" i.e. ""smith""",CAIN,"Qayin (",meaning,male,Hebrew
+form,Short,"""little bald one""",CAL,Calvin,meaning,male,English
+form,Short,"""crooked nose""",CAM,"unisex Cameron (",meaning,male,Scottish
+form,Pet,"""man"" and Christopher ""Christ-bearer""",CHIP,Charles,meaning,male,English
+form,Anglicized,"""chief, freeman, head, hound, intelligence, strength""",CONSTANTINE,"Gaelic Conn, having several possible meanings including",meaning,male,Irish
+form,Anglicized,"""chief, freeman, head, hound, intelligence, strength""",CORNELIUS,"Gaelic Conn, having several possible meanings including",meaning,male,Irish
+form,Anglicized,"""son of Duibhshíth,"" hence ""black peace""",DUFFY,"Gaelic Mac Dhuibhshíthe",meaning,male,Scottish
+form,Anglicized,"""spear ruler""",GEARALT,"Gaelic Gearóid",meaning,male,Irish
+form,Pet,"""supplanter"" and Jeremy ""Jehovah casts forth"" or ""Jehovah hurls""",JEM,James,meaning,male,English
+form,Anglicized,"""Jehovah casts forth"" or ""Jehovah hurls"") and Hebrew Yirmeyah (""whom God has appointed""",JEREMIAH,"Ieremias (",meaning,male,Greek
+form,Pet,"""pointed mountain,"" and more rarely Montgomery ""hill of Gomeric""",MONTY,Montague,meaning,male,English
+form,Short,"""settlement on the moor,"" and Mortimer ""dead sea""",MORT,Morton,meaning,male,English
+form,Pet,"""settlement on the moor,"" and Mortimer ""dead sea""",MORTY,Morton,meaning,male,English
+form,Anglicized,"""descendant of Muircheartach,"" hence ""skilled seaman""",MURTAGH,"Ó Muircheartaigh",meaning,male,Gaelic
+form,Short,"""a giver"" or ""given of God"" and Nathaniel ""given of God""",NAT,Nathan,meaning,male,English
+form,Anglicized,"""his nakedness"") and Hebrew Paroh (""great house""",PHARAOH,"Pharao (",meaning,male,Greek
+form,Short,"""famous power"" and Rodney ""Hroda's fen/island""",ROD,Roderick,meaning,male,English
+form,Diminutive,"""poet""), hence ""little poet""",TEAGAN,"Teague (",meaning,male,English
+form,Pet,"""guardian of prosperity"" and Theodore ""gift of God""",TED,Edward,meaning,male,English
+form,Pet,"""guardian of prosperity"" and Theodore ""gift of God""",TEDDY,Edward,meaning,male,English
+form,Pet,"""foreigner, stranger,"" especially Celtic or Roman, and Walter ""ruler of the army""",WALLY,Wallace,meaning,male,English

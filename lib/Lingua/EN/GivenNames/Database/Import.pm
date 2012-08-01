@@ -198,7 +198,7 @@ sub import_derivations
 
 sub _parse_definition
 {
-	my($self, $match_count, $matched, $key, $pattern, $unparsable, $candidate) = @_;
+	my($self, $matched, $key, $pattern, $unparsable, $skip, $candidate) = @_;
 	my($match) = 0;
 
 	my($derivation); # This is a temp var.
@@ -227,7 +227,7 @@ sub _parse_definition
 		}
 		elsif ($key eq 'c')
 		{
-			$form     = $4 || '';
+			$form     = $4;
 			$kind     = $3;
 			$meaning  = $6;
 			$name     = $2;
@@ -235,6 +235,17 @@ sub _parse_definition
 			$rating   = $5;
 			$sex      = $1;
 			$source   = '-';
+		}
+		elsif ($key eq 'd')
+		{
+			$form     = $4;
+			$kind     = $3;
+			$meaning  = $7;
+			$name     = $2;
+			$original = $6;
+			$rating   = 'meaning';
+			$sex      = $1;
+			$source   = $5;
 		}
 
 		# Warning: These must follow all the assignments above,
@@ -248,9 +259,14 @@ sub _parse_definition
 
 		# Skip freaks which trick my 'parser'.
 
-		if ($$unparsable{$name})
+		if ($$unparsable{$name} || ($name !~ /^[-A-Za-z]+$/) )
 		{
-			$self -> log(notice => "Ignoring candidate $candidate");
+			# This sub is called from within a loop over regexps.
+			# We only want to output this message once per name.
+
+			$self -> log(notice => "Ignoring candidate $candidate") if (! $$skip{$name});
+
+			$$skip{$name} = 1;
 		}
 		else
 		{
@@ -285,9 +301,9 @@ sub parse_derivations
 
 	open(INX, '<', $file_name) || die "Can't open($file_name): $!\n";
 	binmode INX;
-	my(@name) = <INX>;
+	my(@derivation) = <INX>;
 	close INX;
-	chomp @name;
+	chomp @derivation;
 
 	my($un_file_name) = File::Spec -> catfile($self -> data_dir, 'unparsable.txt');
 
@@ -312,7 +328,7 @@ Feminine|French|Hungarian|
 Irish|Irish\s+?and\s+?Scottish\s+?Anglicized|Irish\s+?(?:Anglicized|Gaelic)|Italian|
 Greek|Hebrew|Latin|Latvian|
 (?:Medieval|Middle|Modern)(?:\s+?(?:English|French|Latin))?|Masculine|Modern|
-Older|Pet|Polish|Roman\s+?Latin|Russian|
+Old(?:[Pp]et)?|Older|Pet|Polish|Roman\s+?Latin|Russian|
 Scottish(?:\s+Anglicized)?|Short|Slovak|Spanish|Swedish|
 Unisex|(?:V|v)ariant|Welsh
 EOS
@@ -355,6 +371,15 @@ EOS
 			($sub_pattern_3)     # 5 => Rating.
 			(".+")               # 6 => Meaning.
 			/x,
+		d => qr/
+			(.+?)\.\s            # 1 => Sex.
+			(.+?):\s*            # 2 => Name.
+			($sub_pattern_1)\s+? # 3 => Kind.
+			(form)\s+?           # 4 => Form.
+			(?:of\s+?)?(.+?)\s+? # 5 => Source.
+			(.+?)\s*?(?:,\s*?)?  # 6 => Original.
+			(".+")               # 7 => Meaning.
+			/x,
 	);
 	my($table_name) = $self -> table_names;
 
@@ -372,14 +397,15 @@ EOS
 
 	my($found);
 	my(@mis_match);
+	my(%skip);
 
-	for my $name (@name)
+	for my $candidate (@derivation)
 	{
 		$found = 0;
 
 		for my $key (sort keys %pattern)
 		{
-			if ($self -> _parse_definition(\$match_count, \%matched, $key, $pattern{$key}, \%unparsable, $name) )
+			if ($self -> _parse_definition(\%matched, $key, $pattern{$key}, \%unparsable, \%skip, $candidate) )
 			{
 				$found = $key;
 
@@ -393,30 +419,31 @@ EOS
 		}
 		else
 		{
-			# Rearrange $name so the actual name is at the end,
+			# Rearrange $candidate so the actual name is at the end,
 			# and the prefix is 'notice: ...'.
 			# This means we can sort the output looking for patterns to match.
 
-			if ($name =~ /(.+?):\s*(.+)/s)
+			if ($candidate =~ /(.+?):\s*(.+)/s)
 			{
-				$name = "1: $2 | $1";
+				$candidate = "1: $2 | $1";
 			}
-			elsif ($name !~ /^[A-Z]{2,}/)
+			elsif ($candidate !~ /^[A-Z]{2,}/)
 			{
-				$name = "2: $name";
+				$candidate = "2: $candidate";
 			}
 			else
 			{
-				$name = "3: $name";
+				$candidate = "3: $candidate";
 			}
 
-			push @mis_match, $name;
+			push @mis_match, $candidate;
 		}
 	}
 
-	my($mismatch_count) = scalar @name - $match_count;
+	my($mismatch_count)   = scalar @derivation - $match_count;
+	my($mismatch_message) = "Target count: " . scalar @derivation . ". Match count: $match_count. Mis-match count: $mismatch_count";
 
-	$self -> log(debug => "Target count: " . scalar @name . ". Match count: $match_count. Mis-match count: $mismatch_count");
+	$self -> log(debug => $mismatch_message);
 
 	my($csv) = Text::CSV -> new({binary => 1});
 
@@ -464,7 +491,7 @@ EOS
 	my($parse_file_name) = File::Spec -> catfile($self -> data_dir, 'parse.log');
 
 	open(OUT, '>>', $parse_file_name) || die "Can't open($parse_file_name): $!\n";
-	print OUT "Updated $file_name. Target count: ", scalar @name, ". Match count: $match_count. Mis-match count: $mismatch_count. \n";
+	print OUT "Updated $file_name. $mismatch_message. \n";
 	close OUT;
 
 	$self -> log(debug => "Updated $parse_file_name");
