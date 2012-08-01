@@ -21,8 +21,6 @@ use HTML::TreeBuilder;
 
 use IO::File;
 
-use Perl6::Slurp; # For slurp().
-
 use Text::CSV;
 
 use Unicode::CaseFold;  # For fc().
@@ -291,7 +289,13 @@ sub parse_derivations
 	close INX;
 	chomp @name;
 
-	my(@unparsable) = map{tr/a-z/A-Z/; $_} slurp(File::Spec -> catfile($self -> data_dir, 'unparsable.txt'), {chomp => 1});
+	my($un_file_name) = File::Spec -> catfile($self -> data_dir, 'unparsable.txt');
+
+	open(INX, '<', $un_file_name) || die "Can't open($un_file_name): $!";
+	binmode INX;
+	my(@unparsable) = map{tr/a-z/A-Z/; $_} <INX>;
+	close INX;
+	chomp @unparsable;
 
 	$self -> log(debug => 'Names which are currently unparsable:');
 	$self -> log(debug => $_) for sort @unparsable;
@@ -308,7 +312,7 @@ Feminine|French|Hungarian|
 Irish|Irish\s+?and\s+?Scottish\s+?Anglicized|Irish\s+?(?:Anglicized|Gaelic)|Italian|
 Greek|Hebrew|Latin|Latvian|
 (?:Medieval|Middle|Modern)(?:\s+?(?:English|French|Latin))?|Masculine|Modern|
-Pet|Polish|Roman\s+?Latin|Russian|
+Older|Pet|Polish|Roman\s+?Latin|Russian|
 Scottish(?:\s+Anglicized)?|Short|Slovak|Spanish|Swedish|
 Unisex|(?:V|v)ariant|Welsh
 EOS
@@ -327,7 +331,7 @@ EOS
 			(.+?):\s*                             # 2 => Name.
 			($sub_pattern_1)\s+?                  # 3 => Kind.
 			($sub_pattern_2)                      # 4 => Form.
-			(?:equivalent|form|spelling|use)\s+?)
+			(?:equivalent|form|from|spelling|use)\s+?) # 'from' is a input typo for 'form'.
 			(?:of\s+?)?(.+?)\s+?                  # 5 => Source.
 			(.+?)\s*?(?:,\s*?)?                   # 6 => Original.
 			($sub_pattern_3)                      # 7 => Rating.

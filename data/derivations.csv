@@ -176,7 +176,6 @@ form,Feminine,"""like Albus,"" i.e. ""white""",ALBINA,Albin,meaning,female,Engli
 "variant spelling",English,"""the high, exalted one""",ALEA,Aliya,meaning,female,Arabic
 spelling,Variant,"""little Eve""",ALEEN,Aileen,meaning,female,English
 "variant spelling",English,"""noble sort""",ALEESHA,Alicia,meaning,female,Spanish
-form,Russian,"""torch.""Short form of Latin Magdalena, meaning ""of Magdala""",ALENA,"Helï��nē","possibly meaning",female,Greek
 spelling,Variant,"""little Eve""",ALENE,Aileen,meaning,female,English
 "variant spelling",English,"""noble sort""",ALESHA,Alicia,meaning,female,Spanish
 spelling,Variant,"""truth""",ALETHA,Alethea,meaning,female,English
@@ -538,6 +537,7 @@ form,Feminine,"""believer"" or ""follower of Christ""",CHRISTIANA,Christianus,me
 form,Feminine,"""believer"" or ""follower of Christ""",CHRISTIANNE,Christian,meaning,female,English
 "pet form",English,"""believer"" or ""follower of Christ""",CHRISTIE,Christina,meaning,female,Latin
 spelling,Variant,"""believer"" or ""follower of Christ""",CHRISTINA,Christiana,meaning,female,Latin
+from,French,"""believer"" or ""follower of Christ""",CHRISTINE,Christina,meaning,female,Latin
 spelling,Variant,"""believer"" or ""follower of Christ"" and ""beautiful""",CHRISTOBEL,Christabel,meaning,female,English
 spelling,Variant,"""believer"" or ""follower of Christ""",CHRISTY,Christie,meaning,female,English
 form,Latin,"""golden flower""",CHRYSANTA,Chrysanthe,meaning,female,Greek
@@ -1762,6 +1762,7 @@ form,Feminine,"""help""",OPHELIA,Ophelos,meaning,female,Greek
 "variant spelling",Feminine,"""fawn""",OPRAH,"unisex Ophrah",meaning,female,Hebrew
 spelling,Variant,"""golden""",ORALEE,Oralie,meaning,female,English
 form,English,"""golden""",ORALIE,Aurélie,meaning,female,French
+from,French,"""golden""",ORIANE,Oriana,"possibly meaning",female,Latin
 spelling,Variant,"""golden""",ORIANNE,Oriane,"possibly meaning",female,French
 form,Anglicized,"""gold-princess""",ORLA,"Gaelic Órfhlaith",meaning,female,Irish
 form,Anglicized,"""gold-princess""",ORLAGH,"Gaelic Órfhlaith",meaning,female,Irish
@@ -2561,6 +2562,7 @@ form,Anglicized,"""charioteer""",CARBREY,Cairbre,meaning,male,Gaelic
 spelling,Variant,"""charioteer""",CARBRY,Carbrey,meaning,male,English
 spelling,Variant,"""dark one""",CAREY,"unisex Cary",meaning,male,English
 spelling,Variant,"""dark one""",CARI,"unisex Cary",meaning,male,English
+spelling,Older,"""man""",CARL,Karl,meaning,male,German
 spelling,Variant,"""settlement of the free peasants""",CARLTON,Charlton,meaning,male,English
 spelling,Variant,"""fortress of Luguvalos""",CARLYLE,Carlisle,meaning,male,English
 form,Anglicized,"""a vinedresser"" or ""my vineyard""",CARMI,Karmiy,meaning,male,Hebrew
@@ -2691,6 +2693,7 @@ form,Anglicized,"""sunset""",DISMAS,Dysmas,meaning,male,Greek
 form,Short,"""noble wolf""",DOLPH,Adolph,meaning,male,English
 form,Short,"""belongs to the lord""",DOM,Dominic,meaning,male,English
 spelling,Variant,"""belongs to the lord""",DOMENIC,Dominic,meaning,male,English
+spelling,Older,"""belongs to the lord""",DOMINICK,Dominic,meaning,male,English
 form,Short,"""world ruler""",DON,Donald,meaning,male,English
 form,Anglicized,"""brown warrior""",DONAGHY,"Gaelic Donnchadh",meaning,male,Irish
 form,Anglicized,"""world ruler""",DONAL,"Gaelic Dónal",meaning,male,Irish
