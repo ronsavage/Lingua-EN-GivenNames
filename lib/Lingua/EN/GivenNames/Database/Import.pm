@@ -118,7 +118,20 @@ sub generate_derivation
 {
 	my($self, $item) = @_;
 
-	return "$$item{kind} $$item{form} of $$item{source} $$item{original}, $$item{rating} '$$item{meaning}'";
+	my($s);
+
+	# These strings use qq|...| and not "..." because $$item{meaning} contains " chars.
+
+	if ($$item{original} eq '-')
+	{
+		$s = qq|$$item{kind} $$item{form}, $$item{rating} $$item{meaning}|;
+	}
+	else
+	{
+		$s = qq|$$item{kind} $$item{form} of $$item{source} $$item{original}, $$item{rating} $$item{meaning}|;
+	}
+
+	return $s;
 
 } # End of generate_derivation.
 
@@ -201,21 +214,37 @@ sub _parse_definition
 
 	if ($candidate =~ $pattern)
 	{
-		$form     = $4 || '';
-		$kind     = $3;
-		$meaning  = $8;
-		$name     = $2;
-		$original = $6;
-		$rating   = $7;
-		$sex      = $1;
-		$source   = $5;
+		# Warning: You cannot use regpexps here. They reset $1 etc.
+
+		if ( ($key eq 'a') || ($key eq 'b') )
+		{
+			$form     = $4 || '';
+			$kind     = $3;
+			$meaning  = $8;
+			$name     = $2;
+			$original = $6;
+			$rating   = $7;
+			$sex      = $1;
+			$source   = $5;
+		}
+		elsif ($key eq 'c')
+		{
+			$form     = $4 || '';
+			$kind     = $3;
+			$meaning  = $6;
+			$name     = $2;
+			$original = '-';
+			$rating   = $5;
+			$sex      = $1;
+			$source   = '-';
+		}
 
 		# Warning: These must follow all the assignments above,
 		# because they reset $1 .. $7.
 
 		$form    =~ s/\s$//;
-		$meaning =~ s/[,.]$//;
-		$meaning =~ s/^\s//;
+		$meaning =~ s/^"\s/"/;
+		$meaning =~ s/[,.]"$/"/;
 		$name    =~ s/\s+\(.+\)//;
 		$rating  =~ s/\s$//;
 
@@ -272,42 +301,55 @@ sub parse_derivations
 	@unparsable{@unparsable} = (1) x @unparsable;
 
 	my($sub_pattern_1) = <<'EOS';
-Anglicized|Breton|Contracted|Diminutive|Elaborated|
-English\s+?and\s+?(?:French|German|Latin|Scottish)|
-(?:(?:American|British)\s+?)?English|
-Feminine|French|Irish\s+?Gaelic|
-Latin|Latvian|Medieval\s+?English|Modern|
-Old\s+?English|Pet|Polish|
-Scottish(?:\s+Anglicized)?|Short|Slovak|Spanish|Unisex|
-(?:V|v)ariant
+Abbreviated|Anglicized|Breton|Celtic|Contracted|Diminutive|Dutch|Egyptian|Elaborated|
+English|English\s+?and\s+?(?:French|German|Latin|Scottish)|
+(?:(?:American|British|Early|Old)\s+?)?English|
+Feminine|French|Hungarian|
+Irish|Irish\s+?and\s+?Scottish\s+?Anglicized|Irish\s+?(?:Anglicized|Gaelic)|Italian|
+Greek|Hebrew|Latin|Latvian|
+(?:Medieval|Middle|Modern)(?:\s+?(?:English|French|Latin))?|Masculine|Modern|
+Pet|Polish|Roman\s+?Latin|Russian|
+Scottish(?:\s+Anglicized)?|Short|Slovak|Spanish|Swedish|
+Unisex|(?:V|v)ariant|Welsh
 EOS
 	my($sub_pattern_2) = <<'EOS';
 (?:(?:adopted|contracted|diminutive|elaborated|feminine|pet|short|unisex|variant)?\s*?
 EOS
-	# Note for 2 => Name: Beware 'NAME (Text):'. Also, text can contain ':'.
+	my($sub_pattern_3) = <<'EOS';
+(?:possibly\s+?)?meaning\s*?(?:(?:both|either|simply)\s*)?
+EOS
+	# Note for '2 => Name' below: Beware 'NAME (Text): etc'. Also, Text can contain ':'.
 
 	my(%pattern) =
 	(
 		a => qr/
-			(.+?)\.\s            # 1 => Sex.
-			(.+?):\s*            # 2 => Name.
-			($sub_pattern_1)\s+? # 3 => Kind.
-			($sub_pattern_2)     # 4 => Form.
+			(.+?)\.\s                             # 1 => Sex.
+			(.+?):\s*                             # 2 => Name.
+			($sub_pattern_1)\s+?                  # 3 => Kind.
+			($sub_pattern_2)                      # 4 => Form.
 			(?:equivalent|form|spelling|use)\s+?)
-			(?:of\s+?)?(.+?)\s+? # 5 => Source.
-			(.+?)\s*?(?:,\s*?)?  # 6 => Original.
-			((?:possibly\s+?)?meaning\s*?(?:simply\s*)?) # 7 => Rating.
-			"(.+?)" # 8 => Meaning.
+			(?:of\s+?)?(.+?)\s+?                  # 5 => Source.
+			(.+?)\s*?(?:,\s*?)?                   # 6 => Original.
+			($sub_pattern_3)                      # 7 => Rating.
+			(".+")                                # 8 => Meaning.
 			/x,
 		b => qr/
-			(.+?)\.\s            # 1 => Sex.
-			(.+?):\s*            # 2 => Name.
-			($sub_pattern_1)\s+? # 3 => Kind.
+			(.+?)\.\s                  # 1 => Sex.
+			(.+?):\s*                  # 2 => Name.
+			($sub_pattern_1)\s+?       # 3 => Kind.
 			(form)\s+?                 # 4 => Form.
 			(?:of\s+?)(.+?\s+?.+?)\s+? # 5 => Source.
 			(.+?)(?:,\s*?)?            # 6 => Original.
-			((?:possibly\s+?)?meaning\s*?(?:simply\s*)?) # 7 => Rating.
-			"(.+?)" # 8 => Meaning.
+			($sub_pattern_3)           # 7 => Rating.
+			(".+")                     # 8 => Meaning.
+			/x,
+		c => qr/
+			(.+?)\.\s            # 1 => Sex.
+			(.+?):\s*            # 2 => Name.
+			($sub_pattern_1)\s+? # 3 => Kind.
+			(name)\s+?           # 4 => Form.
+			($sub_pattern_3)     # 5 => Rating.
+			(".+")               # 6 => Meaning.
 			/x,
 	);
 	my($table_name) = $self -> table_names;
