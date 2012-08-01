@@ -86,9 +86,15 @@ Lingua::EN::GivenNames - SQLite database of derivations of English given names
 
 www.20000-names.com I<has been scraped>. You do not need to run the script which downloads pages from there.
 
-Just use the SQLite database shipped with this module, as discussed next.
+Just use the SQLite database shipped with this module, as discussed next, or one of the export scripts.
+
+The database is on-line at: L<http://savage.net.au/Perl-modules/html/Lingua/EN/GivenNames/given.names.html>.
+
+That page was created with the jQuery option to scripts/export.as.html.pl set to 1.
 
 =head2 Basic Usage
+
+This is the simplest way to access the data.
 
 	use Lingua::EN::GivenNames::Database;
 
@@ -102,17 +108,17 @@ Each element in @$names contains data for 1 record in the database, and has thes
 (in alphabetical order):
 
 	{
-		derivation => Foreign key into derivations table,
+		derivation => The derivation,
 		fc_name    => The case-folded name,
-		form       => Foreign key into forms table,
+		form       => The form,
 		id         => The primary key of this record,
-		kind       => Foreign key into kinds table,
-		meaning    => Foreign key into meanings table,
+		kind       => The kind,
+		meaning    => The meaning,
 		name       => The name,
-		original   => Foreign key into originals table,
-		rating     => Foreign key into ratings table,
-		sex        => Foreign key into sexes table,
-		source     => Foreign key into sources table,
+		original   => The original (name),
+		rating     => The rating (relability indicator),
+		sex        => The sex,
+		source     => The source (language or name),
 	}
 
 See L</FAQ> entries for details.
@@ -125,8 +131,6 @@ Some examples:
 
 	shell>perl scripts/export.as.csv.pl  -cvs_file      given.names.csv
 	shell>perl scripts/export.as.html.pl -web_page_file given.names.html
-
-This file is on-line at: L<http://savage.net.au/Perl-modules/html/Lingua/EN/GivenNames/given.names.html>.
 
 =head1 Description
 
@@ -244,6 +248,32 @@ Also, I<verbose> is an option to L</new()>.
 
 =head1 FAQ
 
+=head2 Are the input web pages difficult to process?
+
+Yes! Some pages contain names in various character encodings, making the derivation analysis very
+difficult.
+
+Examples of the many, many things to watch out for are:
+
+=over 4
+
+=item o data/female_english_names.htm line 4913
+
+=item o data/female_english_names_05.htm line 3284
+
+=item o The hex char \xC2
+
+This appears all over the place.
+
+=item o Nested web pages
+
+The pages contain the names in a table of 1 row and 1 column, within which is a long list
+of &lt;li&gt; entries.
+
+But elsewhere on the pages, entire web pages have been jammed into table cells. Thanx FrontPage!
+
+=back
+
 =head2 Where is the database?
 
 It is shipped in share/lingua.en.givennames.sqlite.
@@ -335,6 +365,9 @@ That sequence of commands (above) is performed by scripts/import.sh.
 Besides outputting data/derivations.csv, this script also outputs data/mismatches.log and
 data/parse.log. It uses L<Lingua::EN::GivenNames::Database::Import>.
 
+Also, this script uses data/unparsable.txt to skip some names. Further, it currently skips names which
+are not all ASCII characters.
+
 =item o scripts/test.pattern.pl
 
 This is code I use to test new regexps before putting them into production in sub parse_derivations()
@@ -349,6 +382,10 @@ database tables. After installation, the database is elsewhere, and read-only, s
 writing to that copy anyway.
 
 After end-user installation, L<File::ShareDir> is used to find the installed version of *.sqlite.
+
+=head2 Why don't you use Perl6::Slurp to read files?
+
+Because I found it (V 0.051000) did not respect the 'raw' file encoding option I specified.
 
 =head1 References
 
