@@ -96,8 +96,7 @@ sub build_names_data
 
 	my(@tr);
 
-	push @tr, [{td => 'id'}, {td => 'name'}, {td => 'sex'}, {td => 'derivation'}];
-
+	push @tr, [{td => 'Id'}, {td => 'Name'}, {td => 'Sex'}, {td => 'Derivation'}];
 
 	for my $name (@{$self -> read_names_table})
 	{
@@ -110,7 +109,7 @@ sub build_names_data
 		];
 	}
 
-	push @tr, [{td => 'id'}, {td => 'name'}, {td => 'sex'}, {td => 'derivation'}];
+	push @tr, [{td => 'Id'}, {td => 'Name'}, {td => 'Sex'}, {td => 'Derivation'}];
 
 	return [@tr];
 

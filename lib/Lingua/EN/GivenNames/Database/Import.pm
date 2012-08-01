@@ -118,7 +118,7 @@ sub generate_derivation
 {
 	my($self, $item) = @_;
 
-	return "$$item{kind} $$item{form} of $$item{source} $$item{original}: $$item{meaning}";
+	return "$$item{kind} $$item{form} of $$item{source} $$item{original}, $$item{rating} '$$item{meaning}'";
 
 } # End of generate_derivation.
 
@@ -213,12 +213,11 @@ sub _parse_definition
 		# Warning: These must follow all the assignments above,
 		# because they reset $1 .. $7.
 
-		$form       =~ s/\s$//;
-		$meaning    =~ s/[,.]$//;
-		$meaning    =~ s/^\s//;
-		$name       =~ s/\s+\(.+\)//;
-		$rating     =~ s/\s$//;
-		$derivation = "$name: $sex. $kind $form of $source $original - $rating: $meaning";
+		$form    =~ s/\s$//;
+		$meaning =~ s/[,.]$//;
+		$meaning =~ s/^\s//;
+		$name    =~ s/\s+\(.+\)//;
+		$rating  =~ s/\s$//;
 
 		# Skip freaks which trick my 'parser'.
 
