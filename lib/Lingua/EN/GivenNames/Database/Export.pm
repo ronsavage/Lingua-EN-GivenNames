@@ -66,8 +66,9 @@ sub as_csv
 
 sub as_html
 {
-	my($self)   = @_;
-	my($config) = $self -> config;
+	my($self)      = @_;
+	my($config)    = $self -> config;
+	my($name_data) = $self -> build_names_data;
 
 	open(OUT, '>', $self -> web_page_file) || die "Can't open file: " . $self -> web_page_file . "\n";
 	binmode(OUT);
@@ -77,7 +78,8 @@ sub as_html
 			'given.names.tx',
 			{
 				default_css => "$$config{_}{css_url}/default.css",
-				name_data   => $self -> build_names_data,
+				name_count  => $#$name_data - 1,
+				name_data   => $name_data,
 				version     => $VERSION,
 			}
 		);
