@@ -8,7 +8,7 @@ WriteMakefile
 	($] ge '5.005') ?
 	(
 		AUTHOR   => 'Ron Savage (ron@savage.net.au)',
-		ABSTRACT => 'English names of nationalities',
+		ABSTRACT => 'An SQLite database of derivations of English given names',
     ) : (),
 	clean =>
 	{

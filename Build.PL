@@ -4,7 +4,7 @@ Module::Build -> new
 (
  module_name    => 'Lingua::EN::GivenNames',
  license        => 'artistic',
- dist_abstract  => 'SQLite database of derivations of given names',
+ dist_abstract  => 'An SQLite database of derivations of English given names',
  dist_author    => 'Ron Savage <ron@savage.net.au>',
  build_requires =>
  {

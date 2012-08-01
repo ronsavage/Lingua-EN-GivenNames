@@ -80,7 +80,7 @@ sub new
 
 =head1 NAME
 
-Lingua::EN::GivenNames - SQLite database of derivations of English given names
+Lingua::EN::GivenNames - An SQLite database of derivations of English given names
 
 =head1 Synopsis
 
@@ -89,7 +89,6 @@ www.20000-names.com I<has been scraped>. You do not need to run the script which
 Just use the SQLite database shipped with this module, as discussed next, or one of the export scripts.
 
 The database is on-line at: L<http://savage.net.au/Perl-modules/html/Lingua/EN/GivenNames/given.names.html>.
-
 That page was created with the jQuery option to scripts/export.as.html.pl set to 1.
 
 =head2 Basic Usage
@@ -127,7 +126,7 @@ See L</FAQ> entries for details.
 
 All scripts respond to the -h option.
 
-Some examples:
+Some examples, with output files that happen to be the defaults:
 
 	shell>perl scripts/export.as.csv.pl  -cvs_file      given.names.csv
 	shell>perl scripts/export.as.html.pl -web_page_file given.names.html
@@ -136,14 +135,13 @@ Some examples:
 
 C<Lingua::EN::GivenNames> is a pure Perl module.
 
-It is used to download various given names-related pages from 20000-names.com, and to then import data
-(scraped from those pages) into an SQLite database.
+It is used to download various Englsh given names-related pages from 20000-names.com, and to then
+import data scraped from those pages into an SQLite database.
 
 The pages have already been downloaded, so that phase only needs to be run when pages are updated.
-
 Likewise, the data has been imported.
 
-This means you would normally only ever use the database in read-only mode.
+This means you would normally only ever use the database in read-only mode, as per the L</Synopsis>.
 
 =head1 Constructor and initialization
 
@@ -247,6 +245,43 @@ Get or set the verbosity level.
 Also, I<verbose> is an option to L</new()>.
 
 =head1 FAQ
+
+=head2 What is the structure of the arrayref of hashrefs returned by Lingua::EN::GivenNames::Database's read_names_table()?
+
+Each element in the arrayref contains data for 1 record in the database, and has these keys
+(in alphabetical order):
+
+	{
+		derivation => The derivation,
+		fc_name    => The case-folded name,
+		form       => The form,
+		id         => The primary key of this record,
+		kind       => The kind,
+		meaning    => The meaning,
+		name       => The name,
+		original   => The original (name),
+		rating     => The rating (relability indicator),
+		sex        => The sex,
+		source     => The source (language or name),
+	}
+
+Details:
+
+=over 4
+
+derivation
+fc_name
+form
+id
+kind
+meaning
+name
+original
+rating
+sex
+source
+
+=back
 
 =head2 Are the input web pages difficult to process?
 
@@ -387,7 +422,10 @@ After end-user installation, L<File::ShareDir> is used to find the installed ver
 
 Because I found it (V 0.051000) did not respect the 'raw' file encoding option I specified.
 
-=head1 References
+=head1 Non-English names
+
+The web site L<20000-names.com> has names in various other languages, for those wishing the adapt
+this code to deal with those cases.
 
 =head1 Support
 
