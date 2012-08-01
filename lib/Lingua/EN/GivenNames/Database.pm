@@ -132,7 +132,7 @@ sub read_names_table
 
 =head1 NAME
 
-Lingua::EN::GivenNames::Database - The interface to locale.givennames.en.sqlite
+Lingua::EN::GivenNames::Database - The interface to lingua.en.givennames.sqlite
 
 =head1 Synopsis
 

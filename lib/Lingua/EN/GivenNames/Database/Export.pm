@@ -160,7 +160,7 @@ sub new
 
 =head1 NAME
 
-Lingua::EN::GivenNames::Database::Export - Export locale.givennames.en.sqlite as CSV and HTML
+Lingua::EN::GivenNames::Database::Export - Export lingua.en.givennames.sqlite as CSV and HTML
 
 =head1 Synopsis
 
@@ -169,11 +169,11 @@ See L<Lingua::EN::GivenNames/Synopsis>.
 =head1 Description
 
 Documents the methods end-users need to export the SQLite database,
-I<locale.givennames.en.sqlite>, which ships with this distro, as either CSV or HTML.
+I<lingua.en.givennames.sqlite>, which ships with this distro, as either CSV or HTML.
 
 See scripts/export.as.csv.pl and scripts/export.as.html.pl.
 
-The input to these scripts is shipped as share/locale.givennames.en.sqlite.
+The input to these scripts is shipped as share/lingua.en.givennames.sqlite.
 
 The output of these scripts is shipped as:
 

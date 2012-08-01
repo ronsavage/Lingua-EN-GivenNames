@@ -26,7 +26,7 @@ our $VERSION = '1.00';
 sub _init
 {
 	my($self, $arg)    = @_;
-	$$arg{config_file} ||= '.htlingua.en.givennames.conf'; # Caller can set.
+	$$arg{config_file} ||= '.ht.lingua.en.givennames.conf'; # Caller can set.
 	$$arg{data_dir}    = 'data';
 	$$arg{sex}         ||= ''; # Caller can set.
 	$$arg{sqlite_file} ||= 'lingua.en.givennames.sqlite';  # Caller can set.
@@ -84,7 +84,7 @@ Lingua::EN::GivenNames - SQLite database of derivations of given names
 
 =head1 Synopsis
 
-www.20000-names.com I<has been scraped>. You do not need to run the scripts which download pages from there.
+www.20000-names.com I<has been scraped>. You do not need to run the script which downloads pages from there.
 
 Just use the SQLite database shipped with this module, as discussed next.
 
@@ -93,17 +93,29 @@ Just use the SQLite database shipped with this module, as discussed next.
 	use Lingua::EN::GivenNames::Database;
 
 	my($database) = Lingua::EN::GivenNames::Database -> new;
-	my($names)    = $database -> read_names_table; # $names is a hashref.
-	...
+	my($names)    = $database -> read_names_table; # $names is an arrayref of hashrefs.
 
-Each key in %$names points to a hashref of all columns for the given key.
+Each element in @$names contains data for 1 record in the database, and has these keys
+(in alphabetical order):
 
-...
+	{
+		derivation => Foreign key into derivations table,
+		fc_name    => The case-folded name,
+		form       => Foreign key into forms table,
+		id         => The primary key of this record,
+		kind       => Foreign key into kinds table,
+		meaning    => Foreign key into meanings table,
+		name       => The name,
+		original   => Foreign key into originals table,
+		rating     => Foreign key into ratingss table,
+		sex        => Foreign key into sexes table,
+		source     => Foreign key into sources table,
+	}
 
-=head3 Warnings
+=head3 Notes
 
-# 1: These hashrefs use the table's primary key as the hashref's key. In the case of the I<names>
-table, the primary key is the name's id. See L</What is the database schema?> for details.
+In the case of the I<names> table, the primary key is the name's id.
+See L</What is the database schema?> for details.
 
 =head2 Scripts which output to a file
 
@@ -114,12 +126,7 @@ Some examples:
 	shell>perl scripts/export.as.csv.pl -c given.names.csv
 	shell>perl scripts/export.as.html.pl -w given.names.html
 
-This file is on-line at: L<http://savage.net.au/Perl-modules/html/Locale/GivenNames/en/given.names.html>.
-
-	shell>perl scripts/report.statistics.pl
-
-	Output statistics:
-	names_in_db => 249.
+This file is on-line at: L<http://savage.net.au/Perl-modules/html/Lingua/EN/GivenNames/given.names.html>.
 
 =head1 Description
 
@@ -162,7 +169,7 @@ Output: data/matches.log, data/mismatches.log and data/parse.log.
 
 Input: data/matches.log.
 
-Output: share/locale.givennames.en.sqlite.
+Output: share/lingua.en.givennames.sqlite.
 
 Note: When the distro is installed, this SQLite file is installed too.
 See L</Where is the database?> for details.
@@ -171,13 +178,13 @@ See L</Where is the database?> for details.
 
 Exports the name data as CSV.
 
-Input: share/locale.givennames.en.sqlite.
+Input: share/lingua.en.givennames.sqlite.
 
 Output: data/names.csv.
 
 =item o scripts/export.as.html -w data/given.names.html
 
-Input: share/locale.givennames.en.sqlite.
+Input: share/lingua.en.givennames.sqlite.
 
 Output: data/given.names.html.
 
@@ -208,7 +215,7 @@ These are used by L<Lingua::EN::GivenNames::Database::Export/as_html()>.
 
 The code prefixes this name with the directory returned by L<File::ShareDir/dist_dir()>.
 
-Default: .htlocale.givennames.en.conf.
+Default: .ht.lingua.en.givennames.conf.
 
 =item o sqlite_file => $file_name
 
@@ -216,7 +223,7 @@ The name of the SQLite database of country and subcountry data.
 
 The code prefixes this name with the directory returned by L<File::ShareDir/dist_dir()>.
 
-Default: locale.givennames.en.sqlite.
+Default: lingua.en.givennames.sqlite.
 
 =item o verbose => $integer
 
@@ -290,12 +297,12 @@ Also, I<verbose> is an option to L</new()>.
 
 =head2 Where is the database?
 
-It is shipped in share/locale.givennames.en.sqlite.
+It is shipped in share/lingua.en.givennames.sqlite.
 
 It is installed into the distro's shared dir, as returned by L<File::ShareDir/dist_dir()>.
 On my machine that's:
 
-/home/ron/perl5/perlbrew/perls/perl-5.14.2/lib/site_perl/5.14.2/auto/share/dist/Locale-GivenNames-en/locale.givennames.en.sqlite.
+/home/ron/perl5/perlbrew/perls/perl-5.14.2/lib/site_perl/5.14.2/auto/share/dist/Locale-GivenNames-en/lingua.en.givennames.sqlite.
 
 =head2 What is the database schema?
 

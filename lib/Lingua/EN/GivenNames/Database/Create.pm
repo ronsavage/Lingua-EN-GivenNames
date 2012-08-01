@@ -289,7 +289,7 @@ sub report
 
 =head1 NAME
 
-Lingua::EN::GivenNames::Database::Create - Create/drop tables in locale.givennames.en.sqlite
+Lingua::EN::GivenNames::Database::Create - Create/drop tables in lingua.en.givennames.sqlite
 
 =head1 Synopsis
 
@@ -298,7 +298,7 @@ See L<Lingua::EN::GivenNames/Synopsis>.
 =head1 Description
 
 Documents the methods end-users need to create/drop tables in the SQLite database,
-I<locale.givennames.en.sqlite>, which ships with this distro.
+I<lingua.en.givennames.sqlite>, which ships with this distro.
 
 See scripts/create.tables.pl and scripts/drop.tables.pl.
 

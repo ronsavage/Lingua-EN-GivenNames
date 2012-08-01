@@ -679,7 +679,7 @@ sub write_table
 
 =head1 NAME
 
-Lingua::EN::GivenNames::Database::Import - Part of the interface to locale.givennames.en.sqlite
+Lingua::EN::GivenNames::Database::Import - Part of the interface to lingua.en.givennames.sqlite
 
 =head1 Synopsis
 
@@ -688,7 +688,7 @@ See L<Lingua::EN::GivenNames/Synopsis>.
 =head1 Description
 
 Documents the methods used to populate the SQLite database,
-I<locale.givennames.en.sqlite>, which ships with this distro.
+I<lingua.en.givennames.sqlite>, which ships with this distro.
 
 See L<Lingua::EN::GivenNames/Description> for a long description.
 
