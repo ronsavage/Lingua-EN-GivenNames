@@ -7,12 +7,11 @@ use warnings;
 use DBI;
 
 use DBIx::Admin::CreateTable;
+use DBIx::Table2Hash;
 
 use File::Slurp; # For read_dir().
 
 use Hash::FieldHash ':all';
-
-use Lingua::EN::GivenNames::Schema;
 
 fieldhash my %attributes  => 'attributes';
 fieldhash my %creator     => 'creator';
@@ -21,6 +20,7 @@ fieldhash my %dsn         => 'dsn';
 fieldhash my %engine      => 'engine';
 fieldhash my %page_counts => 'page_counts';
 fieldhash my %password    => 'password';
+fieldhash my %tables      => 'tables';
 fieldhash my %time_option => 'time_option';
 fieldhash my %username    => 'username';
 
@@ -38,6 +38,30 @@ sub get_name_count
 
 # -----------------------------------------------
 
+sub get_tables
+{
+	my($self) = @_;
+
+	my(%data);
+
+	for my $table_name (values %{$self -> table_names})
+	{
+		$data{$table_name} = DBIx::Table2Hash -> new
+		(
+			dbh        => $self -> dbh,
+			key_column => 'id',
+			table_name => $table_name,
+		) -> select_hashref;
+	}
+
+	$self -> tables(\%data);
+
+	return $self -> tables;
+
+} # End of get_tables.
+
+# -----------------------------------------------
+
 sub _init
 {
 	my($self, $arg)    = @_;
@@ -48,6 +72,7 @@ sub _init
 	$$arg{engine}      = '';
 	$$arg{page_counts} = {female => 20, male => 17};
 	$$arg{password}    = '';
+	$$arg{tables}      = '';
 	$$arg{time_option} = '';
 	$$arg{username}    = '';
 	$self              = $self -> SUPER::_init($arg);
@@ -95,11 +120,11 @@ sub new
 
 sub read_names_table
 {
-	my($self)   = @_;
-	my($schema) = Lingua::EN::GivenNames::Schema -> connect($self -> dsn, '', '');
-	my($rs)     = $schema -> resultset('Name');
+	my($self)        = @_;
 
 	my(@name);
+
+=pod
 
 	while (my $result = $rs -> next)
 	{
@@ -121,8 +146,31 @@ sub read_names_table
 
 	return [sort{$$a{name} cmp $$b{name} } @name];
 
+=cut
+
 
 } # End of read_names_table.
+
+# ----------------------------------------------
+
+sub table_names
+{
+	my($self) = @_;
+
+	return
+	{
+		derivation => 'derivations',
+		form       => 'forms',
+		kind       => 'kinds',
+		meaning    => 'meanings',
+		name       => 'names',
+		original   => 'originals',
+		rating     => 'ratings',
+		sex        => 'sexes',
+		source     => 'sources',
+	};
+
+} # End of table_names.
 
 # -----------------------------------------------
 

@@ -549,27 +549,6 @@ sub read_derivations
 
 } # End of read_derivations.
 
-# ----------------------------------------------
-
-sub table_names
-{
-	my($self) = @_;
-
-	return
-	{
-		derivation => 'derivations',
-		form       => 'forms',
-		kind       => 'kinds',
-		meaning    => 'meanings',
-		name       => 'names',
-		original   => 'originals',
-		rating     => 'ratings',
-		sex        => 'sexes',
-		source     => 'sources',
-	};
-
-} # End of table_names.
-
 # -----------------------------------------------
 
 sub validate_derivations
