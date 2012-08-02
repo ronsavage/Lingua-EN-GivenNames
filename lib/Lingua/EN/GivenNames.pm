@@ -246,9 +246,11 @@ Also, I<verbose> is an option to L</new()>.
 
 =head1 FAQ
 
-=head2 What is the structure of the arrayref of hashrefs returned by Lingua::EN::GivenNames::Database's read_names_table()?
+=head2 What does L<Lingua::EN::GivenNames::Database>'s read_names_table() return?
 
-Each element in the arrayref contains data for 1 record in the database, and has these keys
+It returns an arrayref of hashrefs.
+
+Each element in the arrayref contains data for 1 record built from the names table, and has these keys
 (in alphabetical order):
 
 	{
@@ -269,17 +271,50 @@ Details:
 
 =over 4
 
-derivation
-fc_name
-form
-id
-kind
-meaning
-name
-original
-rating
-sex
-source
+=item o derivation
+
+This is the name field from the derivations table.
+
+=item o fc_name
+
+This is the case-folded version of the name field (below).
+It comes from the name field of the names table.
+
+=item o form
+
+This is the name field from the forms table.
+
+=item o id
+
+This is the primary key in the names table.
+
+=item o kind
+
+This is the name field from the kinds table.
+
+=item o meaning
+
+This is the name field from the meanings table.
+
+=item o name
+
+This is, finally, the name itself.
+
+=item o original
+
+This is the name field from the originals table.
+
+=item o rating
+
+This is the name field from the ratings table.
+
+=item o sex
+
+This is the name field from the sexes table.
+
+=item o source
+
+This is the name field from the sources table.
 
 =back
 
@@ -303,7 +338,7 @@ This appears all over the place.
 =item o Nested web pages
 
 The pages contain the names in a table of 1 row and 1 column, within which is a long list
-of &lt;li&gt; entries.
+of the <li> entries I parse.
 
 But elsewhere on the pages, entire web pages have been jammed into table cells. Thanx FrontPage!
 
@@ -353,7 +388,7 @@ step are in data/*.htm.
 
 The database tables are created with:
 
-	scripts/drop.tables.pl (if necessary)
+	scripts/drop.tables.pl
 	scripts/create.tables.pl
 
 Then the data is processed with:
