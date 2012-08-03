@@ -278,7 +278,6 @@ This is the name field from the derivations table.
 =item o fc_name
 
 This is the case-folded version of the name field (below).
-It comes from the name field of the names table.
 
 =item o form
 
@@ -361,8 +360,144 @@ It is installed into the distro's shared dir, along with the database.
 
 =head2 What is the database schema?
 
+See data/dbi.schema.png.
+
 The table names are: forms, kinds, meanings, names, originals, ratings, sexes and sources,
 with names being the main table.
+
+These are the columns in the names table:
+
+=over 4
+
+=item o derivation_id
+
+This is a foreign key pointing to the id column of the derivations table. See data/dbi.schema.svg.
+
+The name field in the derivations table is constructed from various fields in the input,
+in one of the following ways. These fields are extracted from the input using capturing parentheses
+in regexps.
+
+=over 4
+
+=item o qq|$$item{kind} $$item{form}, $$item{rating} $$item{meaning}|
+
+That is, for a given name, the kind field in the input is put into the kinds table, and the
+id which results from that insertion goes into the kind_id field in the names table. Likewise for the
+other components in this derivation.
+
+This is used when the regexp in L<Lingua::EN::GivenNames::Database::Import> sub parse_derivations()
+is type 'c', and hence there is no field in the input which can be extracted and put into the
+originals table. In this case, the name field in the originals table is '-'. The id in the originals
+table will, in this case, be 1 and the original_id field in the names table will also be 1.
+
+=item o qq|$$item{kind} $$item{form} of $$item{source} $$item{original}, $$item{rating} $$item{meaning}|
+
+This is used for regexp types 'a', 'b' and 'd', when a meaningful value for original can be extracted
+from the input.
+
+=back
+
+In other words, when extracting data from the various tables, if you wish to reconstruct the value
+in the derivations table from the foreign keys in the names table, then one of these syntaxes must
+be used to build the original derivation scraped from the web pages. To save you that effort is
+of course why the derivations table is provided, and which is accessed via the derivation_id in the
+names table.
+
+=item o fc_name
+
+This is the case-folded version of the name field (below).
+
+=item o form_id
+
+This is a foreign key pointing to the id column of the forms table.
+
+If we say the name 'Tonya' is the English equivalent of the Italian/Spanish 'Tonia', then the
+'equivalent' component comes from the forms table.
+
+=item o id
+
+This is the primary key.
+
+=item o kind_id
+
+This is a foreign key pointing to the id column of the kinds table.
+
+If we say the name 'Tonya' is the English equivalent of the Italian/Spanish 'Tonia', then the
+'English' component of that derivation comes from the kinds table
+
+=item o meaning_id
+
+This is a foreign key pointing to the id column of the meanings table.
+
+Given the derivation of Tonya as 'English equivalent of Italian/Spanish Tonia, a short form of Latin Antonia, possibly meaning "invaluable"',
+then the component "invaluable" comes from the meanings table.
+
+=item o name
+
+This is the name itself.
+
+=item o original_id
+
+This is a foreign key pointing to the id column of the originals table.
+
+Given the derivation of Tonya as 'English equivalent of Italian/Spanish Tonia, a short form of Latin Antonia, possibly meaning "invaluable"',
+then the component 'Tonia, a short form of Latin Antonia' comes from the originals table.
+
+=item o rating_id
+
+This is a foreign key pointing to the id column of the ratings table.
+
+The value in the ratings table gives an indicator of the reliability of the meaning of the name,
+where the meaning comes from the meanings table.
+
+The value will be one of:
+
+=over 4
+
+=item o meaning
+
+It just means what it means.
+
+=item o meaning both
+
+That is, the name has 2 meanings.
+
+Thus the name 'Bonny' means both "good" and "pretty".
+
+=item o meaning either
+
+That is, there is doubt as to which of the 2 meanings is most reliable. The name field in the
+corresponding meanings table will have 2 separate meanings in double-quotes.
+
+Thus the name 'Ailward' has the meaning "noble guard" or "elf guard".
+
+=item o meaning simply
+
+Thus the name 'Brande' means simply "brandy".
+
+=item o possibly meaning
+
+Thus the name 'Raelene' possibly means "sunbeam".
+
+=back
+
+=item o sex_id
+
+This is a foreign key pointing to the id column of the sexes table.
+
+The value in the sexes table, female or male, is how the web site classified the name.
+So, female means the name came from one of the data/female_english_names*.htm files. Likewise for male.
+
+=item o source_id
+
+This is a foreign key pointing to the id column of the sources table.
+
+The value in the sources table is often a language, e.g. 'Italian/Spanish'.
+
+Thus when we say the name 'Tonya' is the English equivalent of the Italian/Spanish 'Tonia', this means
+'Tonya' is sourced from 'Tonia' in Italian/Spanish.
+
+=back
 
 =head2 What do I do if I find a mistake in the data?
 
