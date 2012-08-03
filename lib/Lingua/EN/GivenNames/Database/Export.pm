@@ -72,7 +72,6 @@ sub as_html
 
 	open(OUT, '>', $self -> web_page_file) || die "Can't open file: " . $self -> web_page_file . "\n";
 	binmode(OUT);
-
 	print OUT $self -> templater -> render
 		(
 			'given.names.tx',

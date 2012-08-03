@@ -20,7 +20,6 @@ fieldhash my %dsn         => 'dsn';
 fieldhash my %engine      => 'engine';
 fieldhash my %page_counts => 'page_counts';
 fieldhash my %password    => 'password';
-fieldhash my %tables      => 'tables';
 fieldhash my %time_option => 'time_option';
 fieldhash my %username    => 'username';
 
@@ -54,9 +53,7 @@ sub get_tables
 		) -> select_hashref;
 	}
 
-	$self -> tables(\%data);
-
-	return $self -> tables;
+	return \%data;
 
 } # End of get_tables.
 
@@ -72,7 +69,6 @@ sub _init
 	$$arg{engine}      = '';
 	$$arg{page_counts} = {female => 20, male => 17};
 	$$arg{password}    = '';
-	$$arg{tables}      = '';
 	$$arg{time_option} = '';
 	$$arg{username}    = '';
 	$self              = $self -> SUPER::_init($arg);
@@ -120,34 +116,33 @@ sub new
 
 sub read_names_table
 {
-	my($self)        = @_;
+	my($self) = @_;
+	my($data) = $self -> get_tables;
 
+	my($entry);
 	my(@name);
 
-=pod
-
-	while (my $result = $rs -> next)
+	for my $id (keys %{$$data{names} })
 	{
+		$entry = $$data{names}{$id};
+
 		push @name,
 		{
-			derivation => $result -> derivation -> name,
-			fc_name    => $result -> fc_name,
-			form       => $result -> form -> name,
-			id         => $result -> id,
-			kind       => $result -> kind -> name,
-			meaning    => $result -> meaning -> name,
-			name       => $result -> name,
-			original   => $result -> original -> name,
-			rating     => $result -> rating -> name,
- 			sex        => $result -> sex -> name,
-			source     => $result -> source -> name,
+			derivation => $$data{derivations}{$$entry{derivation_id} }{name},
+			fc_name    => $$entry{fc_name},
+			form       => $$data{forms}{$$entry{form_id} }{name},
+			id         => $id,
+			kind       => $$data{kinds}{$$entry{kind_id} }{name},
+			meaning    => $$data{meanings}{$$entry{meaning_id} }{name},
+			name       => $$entry{name},
+			original   => $$data{originals}{$$entry{original_id} }{name},
+			rating     => $$data{ratings}{$$entry{rating_id} }{name},
+ 			sex        => $$data{sexes}{$$entry{sex_id} }{name},
+			source     => $$data{sources}{$$entry{source_id} }{name},
 		};
 	}
 
 	return [sort{$$a{name} cmp $$b{name} } @name];
-
-=cut
-
 
 } # End of read_names_table.
 
