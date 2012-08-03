@@ -20,4 +20,4 @@ mv $$.log data/mismatches.log
 perl -Ilib scripts/drop.tables.pl
 perl -Ilib scripts/create.tables.pl
 perl -Ilib scripts/import.derivations.pl -v 1
-perl -Ilib scripts/export.as.html.pl -w data/given.names.html -v 1
+perl -Ilib scripts/export.pl -w data/given.names.html -v 1

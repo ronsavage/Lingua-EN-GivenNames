@@ -400,22 +400,35 @@ Then the data is processed with:
 	Output file: data/derivations.csv
 	Reader:      scripts/import.derivations.pl
 	Output file: share/lingua.en.givennames.sqlite (when $ENV{AUTHOR_TESTING} == 1)
-	Reader:      scripts/export.as.html.pl
+	Reader:      scripts/export.pl
 	Output file: data/given.names.html
 
 Scripts (in alphabetical order):
 
 =over 4
 
-=item o scripts/export.as.csv.pl and scripts.export.as.html.pl
+=item o scripts/create.tables.pl
 
-The obviously read the database and output the expected data. They use
-L<Lingua::EN::GivenNames::Database::Export>.
+Creates all the database tables. Remember to run drop.tables.pl first if the tables already exist.
+
+=item o scripts/drop.tables.pl
+
+Drops all the database tables. Then run create.tables.pl immediately afterwards.
+
+=item o scripts/export.pl
+
+This script obviously reads the database and outputs the expected data. It uses
+L<Lingua::EN::GivenNames::Database::Export>, and command line options -csv_file or -web_page_file.
 
 =item o scripts/extract.derivations.pl
 
 This script is run once each for 20 pages of female names and once each for 17 pages of male names.
 It uses L<Lingua::EN::GivenNames::Database::Import>.
+
+=item o scripts/extract.parse.sh
+
+Run scripts/extract.derivations.pl and then scripts/parse.derivations.pl on one page for one sex.
+This script is used only by the author while developing the module.
 
 =item o scripts/get.name.pages.pl
 
@@ -437,6 +450,25 @@ data/parse.log. It uses L<Lingua::EN::GivenNames::Database::Import>.
 
 Also, this script uses data/unparsable.txt to skip some names. Further, it currently skips names which
 are not all ASCII characters.
+
+=item o scripts/plot.schema.sh
+
+Should output a *.png file of the database's schema, but it doesn't.
+
+=item o scripts/report.statistics.pl
+
+Prints these database statistics:
+
+	Table            Records
+	derivations         3062
+	forms                 15
+	kinds                 52
+	meanings            1356
+	names               3967
+	originals           2393
+	ratings                5
+	sexes                  2
+	sources               56
 
 =item o scripts/test.pattern.pl
 
