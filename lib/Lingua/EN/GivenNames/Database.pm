@@ -75,7 +75,7 @@ sub _init
 
 	$self -> dsn('dbi:SQLite:dbname=' . $self -> sqlite_file);
 	$self -> dbh(DBI -> connect($self -> dsn, $self -> username, $self -> password, $self -> attributes) ) || die $DBI::errstr;
-	$self -> dbh -> do('PRAGMA foreign_keys = ON');
+	$self -> dbh -> do('PRAGMA foreign_keys = ON') if ($self -> dsn =~ /SQLite/i);
 
 	$self -> creator
 		(

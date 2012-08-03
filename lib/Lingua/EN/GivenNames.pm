@@ -451,10 +451,6 @@ data/parse.log. It uses L<Lingua::EN::GivenNames::Database::Import>.
 Also, this script uses data/unparsable.txt to skip some names. Further, it currently skips names which
 are not all ASCII characters.
 
-=item o scripts/plot.schema.sh
-
-Should output a *.png file of the database's schema, but it doesn't.
-
 =item o scripts/report.statistics.pl
 
 Prints these database statistics:
