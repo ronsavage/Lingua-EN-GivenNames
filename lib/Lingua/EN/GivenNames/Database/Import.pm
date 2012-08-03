@@ -11,8 +11,6 @@ use Data::Dumper::Concise; # For Dumper().
 
 use DBI;
 
-use Encode; # For decode().
-
 use File::Spec;
 
 use Hash::FieldHash ':all';
@@ -24,7 +22,6 @@ use IO::File;
 use Text::CSV;
 
 use Unicode::CaseFold;  # For fc().
-use Unicode::Normalize; # For NFD(), NFC().
 
 fieldhash my %page_number => 'page_number';
 
@@ -602,7 +599,7 @@ sub write_names
 	{
 		$i++;
 
-		$name = decode('utf8', ucfirst lc $$item{name});
+		$name = ucfirst lc $$item{name};
 
 		@record = ($$item{derivation}, $$item{form}, $$item{kind}, $$item{meaning}, $$item{original}, $$item{rating}, $$item{sex}, $$item{source}, fc $name, $name);
 
@@ -639,7 +636,7 @@ sub write_table
 
 		$seen{$key} = $i;
 
-		$sth -> execute(fc decode('utf8', $key), decode('utf8', $key));
+		$sth -> execute(fc $key, $key);
 	}
 
 	$sth -> finish;

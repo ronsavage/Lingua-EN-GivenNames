@@ -23,7 +23,6 @@ Module::Build -> new
 		DBIx::Admin::CreateTable => 2.07,
 		DBIx::Table2Hash         => 1.17,
 		Data::Dumper::Concise    => 2.020,
-		Encode                   => 2.44,
 		ExtUtils::MakeMaker      => 6.62,
 		feature                  => 1.20,
 		File::ShareDir           => 1.03,

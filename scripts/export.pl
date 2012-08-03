@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 #
 # Name:
-#	export.as.html.pl.
+#	export.pl.
 
 use strict;
 use warnings;
@@ -21,6 +21,7 @@ my(%option);
 if ($option_parser -> getoptions
 (
 	\%option,
+	'csv_file=s',
 	'help',
 	'verbose=s',
 	'web_page_file=s',
@@ -28,7 +29,7 @@ if ($option_parser -> getoptions
 {
 	pod2usage(1) if ($option{'help'});
 
-	exit Lingua::EN::GivenNames::Database::Export -> new(%option) -> as_html;
+	exit Lingua::EN::GivenNames::Database::Export -> new(%option) -> export;
 }
 else
 {
@@ -41,13 +42,14 @@ __END__
 
 =head1 NAME
 
-export.as.html.pl - Export the SQLite database as HTML
+export.pl - Export the SQLite database as HTML
 
 =head1 SYNOPSIS
 
-export.as.html.pl [options]
+export.pl [options]
 
 	Options:
+	-csv_file $aFileName
 	-help
 	-verbose $integer
 	-web_page_file $aFileName
@@ -63,6 +65,14 @@ Default output: Screen.
 =head1 OPTIONS
 
 =over 4
+
+=item o -csv_file $aFileName
+
+A CSV file name, to which given name data will be written.
+
+You must specify a file with either -c or -w.
+
+Default: ''.
 
 =item o -help
 
@@ -83,7 +93,9 @@ Default: 0.
 
 A HTML file name, to which given name data is to be output.
 
-Default: given.names.html
+You must specify a file with either -c or -w.
+
+Default: ''.
 
 =back
 

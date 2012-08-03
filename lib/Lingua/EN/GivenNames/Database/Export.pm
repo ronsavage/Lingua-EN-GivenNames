@@ -5,13 +5,9 @@ use parent 'Lingua::EN::GivenNames::Database';
 use strict;
 use warnings;
 
-use Encode; # For encode().
-
 use Hash::FieldHash ':all';
 
 use Text::Xslate 'mark_raw';
-
-use Unicode::Normalize; # For NFC().
 
 fieldhash my %csv_file      => 'csv_file';
 fieldhash my %templater     => 'templater';
@@ -118,12 +114,33 @@ sub build_names_data
 
 # -----------------------------------------------
 
+sub export
+{
+	my($self) = @_;
+
+	if ($self -> csv_file)
+	{
+		$self -> as_csv;
+	}
+	elsif ($self -> web_page_file)
+	{
+		$self -> as_html;
+	}
+	else
+	{
+		die "You must specify either a csv file or a web page file for output\n";
+	}
+
+} # End of export.
+
+# -----------------------------------------------
+
 sub _init
 {
 	my($self, $arg)      = @_;
-	$$arg{csv_file}      ||= 'given.names.csv'; # Caller can set.
+	$$arg{csv_file}      ||= ''; # Caller can set.
 	$$arg{templater}     = '';
-	$$arg{web_page_file} ||= 'given.names.html'; # Caller can set.
+	$$arg{web_page_file} ||= ''; # Caller can set.
 	$self                = $self -> SUPER::_init($arg);
 
 	$self -> templater
