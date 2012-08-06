@@ -582,7 +582,7 @@ This scripts actually writes the database tables. It uses L<Lingua::EN::GivenNam
 
 That sequence of commands (above) is performed by scripts/import.sh.
 
-If you wish to see what this does:
+To re-create the database, do this:
 
 =over 4
 
@@ -611,7 +611,7 @@ are not all ASCII characters.
 
 Takes a '-name $name' parameter. Samples:
 
-	perl -Ilib scripts/report.name.pl -n Abaegayle
+1) perl -Ilib scripts/report.name.pl -n Abaegayle
 
 	derivation  Variant spelling of English Abigail, meaning "father rejoices"
 	fc_name     abaegayle
@@ -625,7 +625,7 @@ Takes a '-name $name' parameter. Samples:
 	sex         female
 	source      English
 
-	perl scripts/report.name.pl -n Zoe
+2) perl scripts/report.name.pl -n Zoe
 
 	derivation  Greek name, meaning "life"
 	fc_name     zoe
@@ -656,6 +656,16 @@ Prints these database statistics:
 	ratings                5
 	sexes                  2
 	sources               56
+
+=item o scripts/report.stop.words.pl
+
+This uses Lingua::EN::StopWordList to report any stop words which happened to be picked up by the regexps
+used to parse the web page data.
+
+Prints this report:
+
+	Table 'sources' contains these stop words: of
+	Table 'forms' contains these stop words: from, name
 
 =item o scripts/test.pattern.pl
 

@@ -8,7 +8,7 @@ use warnings qw(FATAL utf8);
 
 use Getopt::Long;
 
-use Lingua::EN::GivenNames::Database::Export;
+use Lingua::EN::GivenNames::Database;
 
 use Pod::Usage;
 
@@ -22,13 +22,12 @@ if ($option_parser -> getoptions
 (
 	\%option,
 	'help',
-	'name=s',
 	'verbose:i',
 ) )
 {
 	pod2usage(1) if ($option{'help'});
 
-	exit Lingua::EN::GivenNames::Database::Export -> new(%option) -> report_name;
+	exit Lingua::EN::GivenNames::Database -> new(%option) -> report_stop_words;
 }
 else
 {
@@ -41,15 +40,14 @@ __END__
 
 =head1 NAME
 
-report.name.pl - Report all the information about one name
+report.stop.words.pl - Report if any regexps captured stop words
 
 =head1 SYNOPSIS
 
-report.name.pl [options]
+report.stop.words.pl [options]
 
 	Options:
 	-help
-	-name $name
 	-verbose $integer
 
 All switches can be reduced to a single letter.
@@ -63,12 +61,6 @@ Exit value: 0.
 =item o -help
 
 Print help and exit.
-
-=item o -name $name
-
-Specify the name to be reported on. This option is mandatory.
-
-Default: ''.
 
 =item o -verbose => $integer
 

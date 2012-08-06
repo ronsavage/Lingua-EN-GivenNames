@@ -16,6 +16,10 @@ use File::Slurp; # For read_dir().
 
 use Hash::FieldHash ':all';
 
+use Lingua::EN::StopWordList;
+
+use List::Compare;
+
 fieldhash my %attributes  => 'attributes';
 fieldhash my %creator     => 'creator';
 fieldhash my %dbh         => 'dbh';
@@ -148,6 +152,29 @@ sub read_names_table
 	return [sort{$$a{name} cmp $$b{name} } @name];
 
 } # End of read_names_table.
+
+# ----------------------------------------------
+
+sub report_stop_words
+{
+	my($self)       = @_;
+	my($data)       = $self -> get_tables;
+	my($stop_words) = Lingua::EN::StopWordList -> new -> words;
+
+	for my $table_name (grep{! /names/} values %{$self -> table_names})
+	{
+		my($result) = List::Compare -> new($stop_words, [map{$$data{$table_name}{$_}{name} } keys %{$$data{$table_name} }]);
+		my(@match)  = $result -> get_intersection;
+
+		if ($#match >= 0)
+		{
+			say "Table '$table_name' contains these stop words: ", join(', ', @match);
+		}
+	}
+
+	return 0;
+
+} # End of report_stop_words.
 
 # ----------------------------------------------
 
