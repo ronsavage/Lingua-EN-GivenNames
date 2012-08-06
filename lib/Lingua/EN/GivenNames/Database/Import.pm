@@ -277,6 +277,11 @@ sub _parse_definition
 			push @{$$matched{$key}{rating} },     $rating;
 			push @{$$matched{$key}{sex} },        $sex;
 			push @{$$matched{$key}{source} },     $source;
+
+			if ( ($key eq 'c') || ($key eq 'd') )
+			{
+				$self -> log(debug => "$key => F: $form. K: $kind. M: $meaning. N: $name. O: $original. R: $rating. S: $sex. S: $source");
+			}
 		}
 	}
 
@@ -685,16 +690,6 @@ This is the class's contructor.
 
 Usage: C<< Lingua::EN::GivenNames::Database::Import -> new() >>.
 
-This method takes a hash of options.
-
-Call C<new()> as C<< new(option_1 => value_1, option_2 => value_2, ...) >>.
-
-Available options (these are also methods):
-
-=over 4
-
-=back
-
 =head1 Methods
 
 This module is a sub-class of L<Lingua::EN::GivenNames::Database> and consequently inherits its methods.
@@ -721,11 +716,12 @@ See L</Constructor and initialization>.
 
 =head1 FAQ
 
-For the database schema, etc, see L<Lingua::EN::GivenNames/FAQ>.
+See L<Lingua::EN::GivenNames/FAQ>.
 
 =head2 How is the input scanned?
 
-The regexps in sub parse_derivations() split each line of data/derivations.raw into these fields:
+The regexps in sub parse_derivations() split each line of data/derivations.raw into these fields,
+when using the regexp called 'a':
 
 =over 4
 
@@ -741,14 +737,18 @@ The regexps in sub parse_derivations() split each line of data/derivations.raw i
 
 =item o $6 => Original
 
-=item o $7 => Meaning
+=item o $7 => Rating
+
+=item o $8 => Meaning
 
 =back
 
+These fields are described in L<Lingua::EN::GivenNames/FAQ>. Other regexps have similar outputs.
+
 =head3 Matches using pattern 'a'
 
-'male. ALLISTAIR: Anglicized form of Scottish Gaelic Alastair, meaning "defender of mankind."' becomes the
-hashref (with keys in alphabetical order):
+1) 'male. ALLISTAIR: Anglicized form of Scottish Gaelic Alastair, meaning "defender of mankind."' becomes the
+hashref (with keys in alphabetical order, and text from data/derivations.raw):
 
 	{
 		form     => 'form',
@@ -756,13 +756,14 @@ hashref (with keys in alphabetical order):
 		meaning  => 'defender of mankind',
 		name     => 'ALLISTAIR',
 		original => 'Alastair',
+		rating   => 'meaning',
 		sex      => 'male',
 		source   => 'Scottish Gaelic',
 	}
 
-The derivation is:
+The derivation is: Anglicized form of Scottish Gaelic Alastair, meaning "defender of mankind".
 
-'male. ANTONY: Variant spelling of English Anthony, possibly meaning "invaluable."' becomes:
+2) 'male. ANTONY: Variant spelling of English Anthony, possibly meaning "invaluable."' becomes:
 
 	{
 		form     => 'spelling',
@@ -770,19 +771,20 @@ The derivation is:
 		meaning  => 'invaluable',
 		name     => 'ANTONY',
 		original => 'Anthony',
+		rating   => 'possibly meaning',
 		sex      => 'male',
 		source   => 'English',
 	}
 
-The derivation is:
+The derivation is: Variant spelling of English Anthony, possibly meaning "invaluable".
 
 In each case the derivation is built by sub generate_derivation($item) as:
 
-	"$$item{kind} $$item{form} of $$item{source} $$item{original}: $$item{meaning}"
+	qq|$$item{kind} $$item{form} of $$item{source} $$item{original}, $$item{rating} $$item{meaning}|
 
 =head3 Matches using pattern 'b'
 
-'female. ANTONIA: Feminine form of Roman Latin Antonius, possibly meaning "invaluable." In use by the English, Italians and Spanish. Compare with another form of Antonia.'
+3) 'female. ANTONIA: Feminine form of Roman Latin Antonius, possibly meaning "invaluable." In use by the English, Italians and Spanish. Compare with another form of Antonia.'
 becomes:
 
 	{
@@ -791,11 +793,60 @@ becomes:
 		meaning  => 'invaluable',
 		name     => 'ANTONIA',
 		original => 'Anthony',
+		rating   => 'possibly meaning',
 		sex      => 'female',
 		source   => 'Roman Latin',
 	}
 
-The derivation is: Feminine form of Roman Latin Antonius: invaluable
+The derivation is: Feminine form of Roman Latin Antonius, possibly meaning "invaluable".
+
+The derivation is built by sub generate_derivation($item) as:
+
+	qq|$$item{kind} $$item{form} of $$item{source} $$item{original}, $$item{rating} $$item{meaning}|
+
+=head3 Matches using pattern 'c'
+
+4) 'male. HENGIST: Old English name meaning "stallion." In English legend, this is the name of the brother of Horsa, and ruler of Kent. In Arthurian legend, he was killed by Uther Pendragon.'
+becomes:
+
+	{
+		form     => 'name',
+		kind     => 'Old English',
+		meaning  => 'stallion',
+		name     => 'HENGIST',
+		original => '-',
+		rating   => 'meaning',
+		sex      => 'male',
+		source   => '-',
+	}
+
+The derivation is: Old English name, meaning "stallion".
+
+The derivation is built by sub generate_derivation($item) as:
+
+	qq|$$item{kind} $$item{form}, $$item{rating} $$item{meaning}|
+
+=head3 Matches using pattern 'd'
+
+5) 'female. PRU: Short form of English Prudence "cautious" and Prunella "little prune."'
+becomes:
+
+	{
+		form     => 'form',
+		kind     => 'Short',
+		meaning  => '"cautious" and Prunella "little prune"',
+		name     => 'PRU',
+		original => 'Prudence',
+		rating   => 'meaning',
+		sex      => 'female',
+		source   => 'English',
+	}
+
+The derivation is: Short form of English Prudence, meaning "cautious" and Prunella "little prune".
+
+The derivation is built by sub generate_derivation($item) as:
+
+	qq|$$item{kind} $$item{form} of $$item{source} $$item{original}, $$item{rating} $$item{meaning}|
 
 =head1 References
 

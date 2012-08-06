@@ -360,7 +360,7 @@ It is installed into the distro's shared dir, along with the database.
 
 =head2 What is the database schema?
 
-See data/dbi.schema.png.
+See data/dbi.schema.png. This image was output by L<GraphViz2::DBI>, with a bit of fiddling.
 
 The table names are: forms, kinds, meanings, names, originals, ratings, sexes and sources,
 with names being the main table.
@@ -389,6 +389,8 @@ This is used when the regexp in L<Lingua::EN::GivenNames::Database::Import> sub 
 is type 'c', and hence there is no field in the input which can be extracted and put into the
 originals table. In this case, the name field in the originals table is '-'. The id in the originals
 table will, in this case, be 1 and the original_id field in the names table will also be 1.
+Note: whenever the name field in the originals table is '-', then the name in the sources table is
+also '-'.
 
 =item o qq|$$item{kind} $$item{form} of $$item{source} $$item{original}, $$item{rating} $$item{meaning}|
 

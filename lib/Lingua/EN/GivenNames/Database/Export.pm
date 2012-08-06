@@ -10,6 +10,7 @@ use Hash::FieldHash ':all';
 use Text::Xslate 'mark_raw';
 
 fieldhash my %csv_file      => 'csv_file';
+fieldhash my %name          => 'name';
 fieldhash my %templater     => 'templater';
 fieldhash my %web_page_file => 'web_page_file';
 
@@ -155,6 +156,27 @@ sub _init
 	return $self;
 
 } # End of _init.
+
+# -----------------------------------------------
+
+sub report_name
+{
+	my($self) = @_;
+	my($name) = ucfirst lc $self -> name;
+
+	die "No name specified\n" if (! $name);
+
+	for my $item (@{$self -> read_names_table})
+	{
+		next if ($name ne $$item{name});
+
+		for my $key (sort keys %$item)
+		{
+			print "$key => $$item{$key}\n";
+		}
+	}
+
+} # End of report_name.
 
 # -----------------------------------------------
 

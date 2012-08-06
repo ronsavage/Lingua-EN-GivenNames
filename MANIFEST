@@ -1,6 +1,7 @@
 Build.PL
 Changelog.ini
 CHANGES
+data/dbi.schema.svg
 data/derivations.csv
 data/derivations.raw
 data/female_english_names.htm
@@ -65,16 +66,15 @@ META.yml
 README
 scripts/create.tables.pl
 scripts/drop.tables.pl
-scripts/export.as.csv.pl
-scripts/export.as.html.pl
+scripts/export.pl
 scripts/extract.derivations.pl
 scripts/extract.parse.sh
 scripts/get.name.pages.pl
 scripts/import.derivations.pl
 scripts/import.sh
 scripts/parse.derivations.pl
-scripts/plot.schema.sh
-scripts/test.database.pl
+scripts/report.name.pl
+scripts/report.statistics.pl
 scripts/test.pattern.pl
 share/.ht.lingua.en.givennames.conf
 share/lingua.en.givennames.sqlite

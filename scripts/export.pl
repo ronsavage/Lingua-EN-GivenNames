@@ -23,7 +23,7 @@ if ($option_parser -> getoptions
 	\%option,
 	'csv_file=s',
 	'help',
-	'verbose=s',
+	'verbose:i',
 	'web_page_file=s',
 ) )
 {
@@ -82,7 +82,7 @@ Print help and exit.
 
 Print more or less progress reports. Details (more-or-less):
 
-	0: Print nothing.
+	0: Print nothing. The default if $integer is not supplied.
 	1: Warnings, or anything I'm working on.
 	2: The country table and specials table.
 	3: The kinds of subcountries encountered. See comments in code re 'verbose > 2'.

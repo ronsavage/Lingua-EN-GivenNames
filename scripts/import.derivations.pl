@@ -22,7 +22,7 @@ if ($option_parser -> getoptions
 (
 	\%option,
 	'help',
-	'verbose=s',
+	'verbose:i',
 ) )
 {
 	pod2usage(1) if ($option{'help'});
@@ -70,7 +70,7 @@ Print help and exit.
 
 Print more or less progress reports. Details (more-or-less):
 
-	0: Print nothing.
+	0: Print nothing. The default if $integer is not supplied.
 	1: Warnings, or anything I'm working on.
 	2: The names table.
 

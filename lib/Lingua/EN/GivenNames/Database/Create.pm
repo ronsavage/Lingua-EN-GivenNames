@@ -139,6 +139,7 @@ original_id integer not null references originals(id),
 rating_id integer not null references ratings(id),
 sex_id integer not null references sexes(id),
 source_id integer not null references sources(id),
+comment varchar(255) default '',
 fc_name varchar(255) not null,
 name varchar(255) not null,
 timestamp timestamp $time_option not null default current_timestamp

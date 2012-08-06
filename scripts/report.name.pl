@@ -8,7 +8,7 @@ use warnings qw(FATAL utf8);
 
 use Getopt::Long;
 
-use Lingua::EN::GivenNames::Database::Import;
+use Lingua::EN::GivenNames::Database::Export;
 
 use Pod::Usage;
 
@@ -22,12 +22,13 @@ if ($option_parser -> getoptions
 (
 	\%option,
 	'help',
+	'name=s',
 	'verbose:i',
 ) )
 {
 	pod2usage(1) if ($option{'help'});
 
-	exit Lingua::EN::GivenNames::Database::Import -> new(%option) -> parse_derivations;
+	exit Lingua::EN::GivenNames::Database::Export -> new(%option) -> report_name;
 }
 else
 {
@@ -40,26 +41,20 @@ __END__
 
 =head1 NAME
 
-parse.name.pages.pl - Extract name derivations from web pages.
+report.name.pl - Report all the information about one name
 
 =head1 SYNOPSIS
 
-parse.name.pages.pl [options]
+report.name.pl [options]
 
 	Options:
 	-help
+	-name $name
 	-verbose $integer
 
 All switches can be reduced to a single letter.
 
 Exit value: 0.
-
-Input: data/derivations.txt. Input comes from extract.derivations.pl.
-
-Output: data/matches.log, data/mismatches.log, data/parse.log.
-
-Specifically, pages of female names from 1 to 20 are processed,
-and male names from 1 to 17 are too.
 
 =head1 OPTIONS
 
@@ -69,13 +64,18 @@ and male names from 1 to 17 are too.
 
 Print help and exit.
 
+=item o -name $name
+
+Specify the name to be reported on.
+
+Default: ''.
+
 =item o -verbose => $integer
 
 Print more or less progress reports. Details (more-or-less):
 
 	0: Print nothing. The default if $integer is not supplied.
 	1: Warnings, or anything I'm working on.
-	2: The names table.
 
 Default: 0.
 
