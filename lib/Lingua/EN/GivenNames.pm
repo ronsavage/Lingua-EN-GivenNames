@@ -90,8 +90,8 @@ www.20000-names.com I<has been scraped>. You do not need to run the script which
 
 Just use the SQLite database shipped with this module, as discussed next, or one of the export scripts.
 
-The database is on-line at: L<http://savage.net.au/Perl-modules/html/Lingua/EN/GivenNames/given.names.html>.
-That page was created with the jQuery option to scripts/export.as.html.pl set to 1.
+The database has been export as html: L<http://savage.net.au/Perl-modules/html/Lingua/EN/GivenNames/given.names.html>.
+That page was created with the jQuery option to scripts/export.pl set to 1.
 
 =head2 Basic Usage
 

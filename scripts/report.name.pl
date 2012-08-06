@@ -8,7 +8,7 @@ use warnings qw(FATAL utf8);
 
 use Getopt::Long;
 
-use Lingua::EN::GivenNames::Database::Export;
+use Lingua::EN::GivenNames::Database;
 
 use Pod::Usage;
 
@@ -28,7 +28,7 @@ if ($option_parser -> getoptions
 {
 	pod2usage(1) if ($option{'help'});
 
-	exit Lingua::EN::GivenNames::Database::Export -> new(%option) -> report_name;
+	exit Lingua::EN::GivenNames::Database -> new(%option) -> report_name;
 }
 else
 {

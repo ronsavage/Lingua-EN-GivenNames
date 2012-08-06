@@ -25,6 +25,7 @@ fieldhash my %creator     => 'creator';
 fieldhash my %dbh         => 'dbh';
 fieldhash my %dsn         => 'dsn';
 fieldhash my %engine      => 'engine';
+fieldhash my %name        => 'name';
 fieldhash my %page_counts => 'page_counts';
 fieldhash my %password    => 'password';
 fieldhash my %time_option => 'time_option';
@@ -74,6 +75,7 @@ sub _init
 	$$arg{dbh}         = '';
 	$$arg{dsn}         = '';
 	$$arg{engine}      = '';
+	$$arg{name}        ||= ''; # Caller can set.
 	$$arg{page_counts} = {female => 20, male => 17};
 	$$arg{password}    = '';
 	$$arg{time_option} = '';
@@ -152,6 +154,29 @@ sub read_names_table
 	return [sort{$$a{name} cmp $$b{name} } @name];
 
 } # End of read_names_table.
+
+# -----------------------------------------------
+
+sub report_name
+{
+	my($self) = @_;
+	my($name) = ucfirst lc $self -> name;
+
+	die "No name specified\n" if (! $name);
+
+	my($format) = '%-10s  %s';
+
+	for my $item (@{$self -> read_names_table})
+	{
+		next if ($name ne $$item{name});
+
+		for my $key (sort keys %$item)
+		{
+			say sprintf $format, $key, $$item{$key};
+		}
+	}
+
+} # End of report_name.
 
 # ----------------------------------------------
 

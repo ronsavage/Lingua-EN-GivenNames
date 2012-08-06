@@ -3,6 +3,11 @@
 <title>Given Names and their Derivations</title>
 <link rel="stylesheet" type="text/css" href="/assets/css/lingua/en/givennames/default.css">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" title="currentStyle">@import "/assets/js/DataTables-1.9.2/media/css/demo_page.css"; @import "/assets/js/DataTables-1.9.2/media/css/demo_table.css";</style>
+<script type="text/javascript" src="/assets/js/DataTables-1.9.2/media/js/jquery.js"></script>
+<script type="text/javascript" src="/assets/js/DataTables-1.9.2/media/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" charset="utf-8">$(document).ready(function(){$('#result_table').dataTable();});</script>
+
 </head>
 <body>
 
@@ -29,13 +34,16 @@ The number of names in the database is: 3967.
 
 <h3 class="global_toc_text">Given Names</h3>
 
-<table align="center" border = "1" summary = "Names">
+<table align="center" class="display" id="result_table" cellpadding="0" cellspacing="0" border="0">
+<thead>
 <tr>
-<td>Id</td>
-<td>Name</td>
-<td>Sex</td>
-<td>Derivation</td>
+	<td>Id</td>
+	<td>Name</td>
+	<td>Sex</td>
+	<td>Derivation</td>
 </tr>
+</thead>
+
 <tr>
 <td>1</td>
 <td>Aaran</td>
@@ -23838,16 +23846,8 @@ The number of names in the database is: 3967.
 <td>male</td>
 <td>Anglicized form of Hebrew Tsuwph, meaning &quot;flow, overflow,&quot; hence &quot;honey as dropping&quot;</td>
 </tr>
-<tr>
-<td>Id</td>
-<td>Name</td>
-<td>Sex</td>
-<td>Derivation</td>
-</tr>
 </table>
 
-
-<hr />
 
 </body>
 </html>

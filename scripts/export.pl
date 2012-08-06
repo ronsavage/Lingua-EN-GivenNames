@@ -23,6 +23,7 @@ if ($option_parser -> getoptions
 	\%option,
 	'csv_file=s',
 	'help',
+	'jquery=i',
 	'verbose:i',
 	'web_page_file=s',
 ) )
@@ -51,6 +52,7 @@ export.pl [options]
 	Options:
 	-csv_file $aFileName
 	-help
+	-jquery $Boolean
 	-verbose $integer
 	-web_page_file $aFileName
 
@@ -77,6 +79,12 @@ Default: ''.
 =item o -help
 
 Print help and exit.
+
+=item o -jquery $Boolean
+
+If set to 1, output jQuery-friendy HTML table stuff embedding the value of jquery_url from the config file.
+
+Default: 0.
 
 =item o -verbose $integer
 

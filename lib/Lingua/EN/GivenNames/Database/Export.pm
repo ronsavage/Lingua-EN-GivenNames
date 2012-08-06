@@ -12,7 +12,7 @@ use Hash::FieldHash ':all';
 use Text::Xslate 'mark_raw';
 
 fieldhash my %csv_file      => 'csv_file';
-fieldhash my %name          => 'name';
+fieldhash my %jquery        => 'jquery';
 fieldhash my %templater     => 'templater';
 fieldhash my %web_page_file => 'web_page_file';
 
@@ -69,6 +69,30 @@ sub as_html
 	my($config)    = $self -> config;
 	my($name_data) = $self -> build_names_data;
 
+	my($jquery_stuff);
+	my($thead);
+
+	if ($self -> jquery && $$config{_}{jquery_url})
+	{
+		$jquery_stuff = <<EOS;
+<style type="text/css" title="currentStyle">\@import "$$config{_}{jquery_url}/media/css/demo_page.css"; \@import "$$config{_}{jquery_url}/media/css/demo_table.css";</style>
+<script type="text/javascript" src="$$config{_}{jquery_url}/media/js/jquery.js"></script>
+<script type="text/javascript" src="$$config{_}{jquery_url}/media/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" charset="utf-8">\$(document).ready(function(){\$('#result_table').dataTable();});</script>
+EOS
+		$thead = <<EOS;
+<thead>
+<tr>
+	<td>Id</td>
+	<td>Name</td>
+	<td>Sex</td>
+	<td>Derivation</td>
+</tr>
+</thead>
+EOS
+
+	}
+
 	open(OUT, '>', $self -> web_page_file) || die "Can't open file: " . $self -> web_page_file . "\n";
 	binmode(OUT);
 	print OUT $self -> templater -> render
@@ -76,8 +100,10 @@ sub as_html
 			'given.names.tx',
 			{
 				default_css => "$$config{_}{css_url}/default.css",
-				name_count  => $#$name_data - 1,
+				jquery      => mark_raw($jquery_stuff), # May be undef.
+				name_count  => $#$name_data + 1,
 				name_data   => $name_data,
+				thead       => mark_raw($thead), # May be undef.
 				version     => $VERSION,
 			}
 		);
@@ -96,8 +122,6 @@ sub build_names_data
 
 	my(@tr);
 
-	push @tr, [{td => 'Id'}, {td => 'Name'}, {td => 'Sex'}, {td => 'Derivation'}];
-
 	for my $name (@{$self -> read_names_table})
 	{
 		push @tr,
@@ -108,8 +132,6 @@ sub build_names_data
 			{td => $$name{derivation} },
 		];
 	}
-
-	push @tr, [{td => 'Id'}, {td => 'Name'}, {td => 'Sex'}, {td => 'Derivation'}];
 
 	return [@tr];
 
@@ -142,6 +164,7 @@ sub _init
 {
 	my($self, $arg)      = @_;
 	$$arg{csv_file}      ||= ''; # Caller can set.
+	$$arg{jquery}        ||= 0;  # Caller can set.
 	$$arg{templater}     = '';
 	$$arg{web_page_file} ||= ''; # Caller can set.
 	$self                = $self -> SUPER::_init($arg);
@@ -158,29 +181,6 @@ sub _init
 	return $self;
 
 } # End of _init.
-
-# -----------------------------------------------
-
-sub report_name
-{
-	my($self) = @_;
-	my($name) = ucfirst lc $self -> name;
-
-	die "No name specified\n" if (! $name);
-
-	my($format) = '%-10s  %s';
-
-	for my $item (@{$self -> read_names_table})
-	{
-		next if ($name ne $$item{name});
-
-		for my $key (sort keys %$item)
-		{
-			say sprintf $format, $key, $$item{$key};
-		}
-	}
-
-} # End of report_name.
 
 # -----------------------------------------------
 
