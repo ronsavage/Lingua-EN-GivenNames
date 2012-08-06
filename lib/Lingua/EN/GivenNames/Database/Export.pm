@@ -1,9 +1,11 @@
 package Lingua::EN::GivenNames::Database::Export;
 
+use feature qw/say unicode_strings/;
 use open qw/:std :utf8/;
 use parent 'Lingua::EN::GivenNames::Database';
 use strict;
 use warnings;
+use warnings qw(FATAL utf8);
 
 use Hash::FieldHash ':all';
 
@@ -166,13 +168,15 @@ sub report_name
 
 	die "No name specified\n" if (! $name);
 
+	my($format) = '%-10s  %s';
+
 	for my $item (@{$self -> read_names_table})
 	{
 		next if ($name ne $$item{name});
 
 		for my $key (sort keys %$item)
 		{
-			print "$key => $$item{$key}\n";
+			say sprintf $format, $key, $$item{$key};
 		}
 	}
 

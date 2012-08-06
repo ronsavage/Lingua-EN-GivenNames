@@ -1,8 +1,11 @@
 package Lingua::EN::GivenNames::Database;
 
+use feature qw/say unicode_strings/;
+use open qw(:std :utf8);
 use parent 'Lingua::EN::GivenNames';
 use strict;
 use warnings;
+use warnings qw(FATAL utf8);
 
 use DBI;
 

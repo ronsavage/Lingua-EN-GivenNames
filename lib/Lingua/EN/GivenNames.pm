@@ -1,8 +1,10 @@
 package Lingua::EN::GivenNames;
 
-use 5.008;
+use feature qw/say unicode_strings/;
+use open qw(:std :utf8);
 use strict;
 use warnings;
+use warnings qw(FATAL utf8);
 
 use Config::Tiny;
 
@@ -56,7 +58,7 @@ sub log
 	$level ||= 'debug';
 	$s     ||= '';
 
-	print "$level: $s. \n" if ($self -> verbose);
+	say "$level: $s" if ($self -> verbose);
 
 }	# End of log.
 
@@ -580,6 +582,23 @@ This scripts actually writes the database tables. It uses L<Lingua::EN::GivenNam
 
 That sequence of commands (above) is performed by scripts/import.sh.
 
+If you wish to see what this does:
+
+=over 4
+
+=item o shell> AUTHOR_TESTING=1
+
+This will tell the code to write to share/lingua.en.givennames.sqlite, rather than to the installed database.
+The latter is probably read-only, anyway.
+
+=item o shell> export AUTHOR_TESTING
+
+=item o shell> scripts/import.sh
+
+This runs all the appropriate scripts in one hit. The output is worth examining to get some idea of what happens.
+
+=back
+
 =item o scripts/parse.derivations.pl
 
 Besides outputting data/derivations.csv, this script also outputs data/mismatches.log and
@@ -587,6 +606,41 @@ data/parse.log. It uses L<Lingua::EN::GivenNames::Database::Import>.
 
 Also, this script uses data/unparsable.txt to skip some names. Further, it currently skips names which
 are not all ASCII characters.
+
+=item o scripts/report.name.pl
+
+Takes a '-name $name' parameter. Samples:
+
+	perl -Ilib scripts/report.name.pl -n Abaegayle
+
+	derivation  Variant spelling of English Abigail, meaning "father rejoices"
+	fc_name     abaegayle
+	form        spelling
+	id          8
+	kind        Variant
+	meaning     "father rejoices"
+	name        Abaegayle
+	original    Abigail
+	rating      meaning
+	sex         female
+	source      English
+
+	perl scripts/report.name.pl -n Zoe
+
+	derivation  Greek name, meaning "life"
+	fc_name     zoe
+	form        name
+	id          3962
+	kind        Greek
+	meaning     "life"
+	name        Zoe
+	original    -
+	rating      meaning
+	sex         female
+	source      -
+
+Consult L<http://savage.net.au/Perl-modules/html/Lingua/EN/GivenNames/given.names.html> for the 6 ways to spell
+Abagail.
 
 =item o scripts/report.statistics.pl
 
