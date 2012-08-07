@@ -1,10 +1,10 @@
 #!/usr/bin/env perl
-#
-# Name:
-#	export.pl.
 
+use feature qw/say unicode_strings/;
+use open qw(:std :utf8);
 use strict;
 use warnings;
+use warnings qw(FATAL utf8);
 
 use Getopt::Long;
 
@@ -88,12 +88,7 @@ Default: 0.
 
 =item o -verbose $integer
 
-Print more or less progress reports. Details (more-or-less):
-
-	0: Print nothing. The default if $integer is not supplied.
-	1: Warnings, or anything I'm working on.
-	2: The country table and specials table.
-	3: The kinds of subcountries encountered. See comments in code re 'verbose > 2'.
+Print more or less progress reports.
 
 Default: 0.
 

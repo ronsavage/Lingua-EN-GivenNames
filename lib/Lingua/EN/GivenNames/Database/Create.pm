@@ -39,6 +39,10 @@ names
 		$self -> $method;
 	}
 
+	# Return 0 for success and 1 for failure.
+
+	return 0;
+
 }	# End of create_all_tables.
 
 # --------------------------------------------------
@@ -254,6 +258,10 @@ derivations
 	{
 		$self -> drop_table($table_name);
 	}
+
+	# Return 0 for success and 1 for failure.
+
+	return 0;
 
 }	# End of drop_all_tables.
 

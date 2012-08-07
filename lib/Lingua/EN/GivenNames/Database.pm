@@ -176,7 +176,36 @@ sub report_name
 		}
 	}
 
+	# Return 0 for success and 1 for failure.
+
+	return 0;
+
 } # End of report_name.
+
+# ----------------------------------------------
+
+sub report_statistics
+{
+	my($self)   = @_;
+	my($data)   = $self -> get_tables;
+	my($format) = "%-15s  %7s";
+
+	say sprintf $format, 'Table', 'Records';
+
+	my($records);
+
+	for my $table_name (sort keys %$data)
+	{
+		$records = $$data{$table_name};
+
+		say sprintf $format, $table_name, scalar keys %$records;
+	}
+
+	# Return 0 for success and 1 for failure.
+
+	return 0;
+
+} # End of report_statistics.
 
 # ----------------------------------------------
 
@@ -196,6 +225,8 @@ sub report_stop_words
 			say "Table '$table_name' contains these stop words: ", join(', ', @match);
 		}
 	}
+
+	# Return 0 for success and 1 for failure.
 
 	return 0;
 

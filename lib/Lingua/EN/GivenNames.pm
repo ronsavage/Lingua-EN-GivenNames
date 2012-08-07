@@ -43,7 +43,7 @@ sub _init
 
 	die Config::Tiny -> errstr if (Config::Tiny -> errstr);
 
-	$self -> sqlite_file(File::Spec -> catfile($dir_name, $self -> sqlite_file) );
+	$self -> sqlite_file(File::Spec -> catfile($self -> share_dir, $self -> sqlite_file) );
 
 	binmode STDOUT;
 
@@ -167,8 +167,7 @@ Available options (these are also methods):
 
 =item o config_file => $file_name
 
-The name of the file containing config info, such as I<css_url> and I<template_path>.
-These are used by various modules.
+The name of the file containing config info, such as I<css_url> and I<template_path>, as used by various modules.
 
 The code prefixes this name with the directory returned by L<File::ShareDir/dist_dir()> on the end-user's
 machine, and prefixes it with a simple 'share' on the author's machine (i.e. when $ENV{AUTHOR_TESTING} is 1).
@@ -184,7 +183,7 @@ Default: ''.
 
 =item o sqlite_file => $file_name
 
-The name of the SQLite database of country and subcountry data.
+The name of the SQLite database of given name data.
 
 The code prefixes this name with the directory returned by L<File::ShareDir/dist_dir()> or with 'share',
 as explained under I<config_file> just above.

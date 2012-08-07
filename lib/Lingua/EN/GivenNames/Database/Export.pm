@@ -59,6 +59,10 @@ sub as_csv
 
 	$self -> log(debug => 'Wrote ' . $self -> csv_file);
 
+	# Return 0 for success and 1 for failure.
+
+	return 0;
+
 }	# End of as_csv.
 
 # ------------------------------------------------
@@ -112,6 +116,10 @@ EOS
 
 	$self -> log(debug => 'Wrote ' . $self -> web_page_file);
 
+	# Return 0 for success and 1 for failure.
+
+	return 0;
+
 } # End of as_html.
 
 # -----------------------------------------------
@@ -155,6 +163,10 @@ sub export
 	{
 		die "You must specify either a csv file or a web page file for output\n";
 	}
+
+	# Return 0 for success and 1 for failure.
+
+	return 0;
 
 } # End of export.
 
@@ -262,7 +274,7 @@ Default: 'names.csv'.
 
 =item o web_page_file => $a_html_file_name
 
-Specify the name of the HTML file to which country and subcountry data is exported.
+Specify the name of the HTML file to which given name data is exported.
 
 See htdocs/assets/templates/locale/givennames/en/given.names.tx for the web page template used.
 
