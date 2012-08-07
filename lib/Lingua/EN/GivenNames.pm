@@ -31,14 +31,18 @@ sub _init
 	$$arg{config_file} ||= '.ht.lingua.en.givennames.conf'; # Caller can set.
 	$$arg{data_dir}    = 'data';
 	$$arg{sex}         ||= ''; # Caller can set.
+	$$arg{share_dir}   = '';
 	$$arg{sqlite_file} ||= 'lingua.en.givennames.sqlite';  # Caller can set.
 	$$arg{verbose}     ||= 0; # Caller can set.
 	$self              = from_hash($self, $arg);
 	(my $package       = __PACKAGE__) =~ s/::/-/g;
-	my($dir_name)      = $ENV{AUTHOR_TESTING} ? 'share' : File::ShareDir::dist_dir($package);
 
-	$self -> config_file(File::Spec -> catfile($dir_name, $self -> config_file) );
+	$self -> share_dir($ENV{AUTHOR_TESTING} ? 'share' : File::ShareDir::dist_dir($package) );
+	$self -> config_file(File::Spec -> catfile($self -> share_dir, $self -> config_file) );
 	$self -> config(Config::Tiny -> read($self -> config_file) );
+
+	die Config::Tiny -> errstr if (Config::Tiny -> errstr);
+
 	$self -> sqlite_file(File::Spec -> catfile($dir_name, $self -> sqlite_file) );
 
 	binmode STDOUT;
@@ -164,17 +168,26 @@ Available options (these are also methods):
 =item o config_file => $file_name
 
 The name of the file containing config info, such as I<css_url> and I<template_path>.
-These are used by L<Lingua::EN::GivenNames::Database::Export/as_html()>.
+These are used by various modules.
 
-The code prefixes this name with the directory returned by L<File::ShareDir/dist_dir()>.
+The code prefixes this name with the directory returned by L<File::ShareDir/dist_dir()> on the end-user's
+machine, and prefixes it with a simple 'share' on the author's machine (i.e. when $ENV{AUTHOR_TESTING} is 1).
 
 Default: .ht.lingua.en.givennames.conf.
+
+=item o sex => $male_or_female
+
+Some scripts (scripts/extract.derivations.pl and scripts/get.name.pages.pl) set this parameter to 'male' or
+'female' as needed. See scripts/import.sh for details.
+
+Default: ''.
 
 =item o sqlite_file => $file_name
 
 The name of the SQLite database of country and subcountry data.
 
-The code prefixes this name with the directory returned by L<File::ShareDir/dist_dir()>.
+The code prefixes this name with the directory returned by L<File::ShareDir/dist_dir()> or with 'share',
+as explained under I<config_file> just above.
 
 Default: lingua.en.givennames.sqlite.
 
@@ -214,6 +227,13 @@ help on unpacking and installing.
 
 =head1 Methods
 
+=head2 config()
+
+Returns the hashref of config data as read by L<Config::Tiny>. Used like this:
+
+	my($config)  = $self -> config;
+	my($css_url) = $$config{_}{css_url}; # Note the '_' hash key!
+
 =head2 config_file($file_name)
 
 Get or set the name of the config file.
@@ -221,6 +241,10 @@ Get or set the name of the config file.
 The code prefixes this name with the directory returned by L<File::ShareDir/dist_dir()>.
 
 Also, I<config_file> is an option to L</new()>.
+
+=head2 data_dir()
+
+Returns the name of the data dir within the distro, which is the constant 'data'.
 
 =head2 log($level => $s)
 
@@ -231,6 +255,18 @@ Since $self -> verbose defaults to 0, nothing is printed by default.
 =head2 new()
 
 See L</Constructor and initialization>.
+
+=head2 sex($male_or_female)
+
+Gets and sets the sex attribute, as used by scripts/extract.derivations.pl and scripts/get.name.pages.pl.
+
+Also, I<sex> is an option to L</new()>.
+
+=head2 share_dir()
+
+Returns the name of the share dir. When $ENV{AUTHOR_TESTING} is 1, this will be 'share', within the distro.
+And when $ENV{AUTHOR_TESTING} is 0 (i.e. on an end-user machine), it will be the directory returned by
+L<File::ShareDir/dist_dir()>.
 
 =head2 sqlite_file($file_name)
 
