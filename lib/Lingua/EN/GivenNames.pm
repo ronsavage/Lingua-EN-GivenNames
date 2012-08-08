@@ -126,6 +126,11 @@ Each element in @$names contains data for 1 record in the database, and has thes
 		source     => The source (language or name),
 	}
 
+The most important fields are: name, sex and derivation.
+
+Here, sex means the classification of the name into I<male> or I<female> within the web site which was scraped
+to provide the given name data.
+
 See L</FAQ> entries for details.
 
 =head2 Scripts which output to a file
@@ -348,6 +353,9 @@ This is the name field from the ratings table.
 
 This is the name field from the sexes table.
 
+The value is the classification of the name into I<male> or I<female> within the web site which was scraped
+to provide the given name data.
+
 =item o source
 
 This is the name field from the sources table.
@@ -565,7 +573,7 @@ The database tables are created with:
 	scripts/drop.tables.pl
 	scripts/create.tables.pl
 
-Then the data is processed with:
+Then the data is processed with (see scripts/import.sh):
 
 	Input files: data/*.htm
 	Reader:      scripts/extract.derivations.pl
@@ -660,6 +668,9 @@ Takes a '-name $name' parameter. Samples:
 	sex         female
 	source      English
 
+Consult L<http://savage.net.au/Perl-modules/html/Lingua/EN/GivenNames/given.names.html> for the 6 ways to spell
+Abagail.
+
 2) perl scripts/report.name.pl -n Zoe
 
 	derivation  Greek name, meaning "life"
@@ -674,12 +685,9 @@ Takes a '-name $name' parameter. Samples:
 	sex         female
 	source      -
 
-Consult L<http://savage.net.au/Perl-modules/html/Lingua/EN/GivenNames/given.names.html> for the 6 ways to spell
-Abagail.
-
 =item o scripts/report.statistics.pl
 
-Prints these database statistics:
+Currently prints these database statistics:
 
 	Table            Records
 	derivations         3062
@@ -697,7 +705,7 @@ Prints these database statistics:
 This uses Lingua::EN::StopWordList to report any stop words which happened to be picked up by the regexps
 used to parse the web page data.
 
-Prints this report:
+Currently prints this report:
 
 	Table 'sources' contains these stop words: of
 	Table 'forms' contains these stop words: from, name

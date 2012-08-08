@@ -145,15 +145,20 @@ See L<Lingua::EN::GivenNames/Synopsis>.
 
 =head1 Description
 
-Downloads these pages:
+Documents the methods used to download web pages which will be imported into
+I<lingua.en.givennames.sqlite> (which ships with this distro).
 
-Input: L<http://www.20000-names.com/female_english_names.htm>.
+Specifically, downloads these pages (for sex in ['female', 'male']):
 
-Output: data/female_english_names.htm.
+Input: L<http://www.20000-names.com/${sex}_english_names*.htm>.
+
+Output: data/${sex}_english_names*.htm.
+
+The * means there are a set of pages for each sex.
 
 See scripts/get.name.pages.pl .
 
-Note: These pages have been downloaded, and are shipped with the distro.
+Note: These pages I<have been downloaded>, and are shipped with the distro.
 
 =head1 Constructor and initialization
 
@@ -162,20 +167,6 @@ new(...) returns an object of type C<Lingua::EN::GivenNames::Database::Download>
 This is the class's contructor.
 
 Usage: C<< Lingua::EN::GivenNames::Database::Download -> new() >>.
-
-This method takes a hash of options.
-
-Call C<new()> as C<< new(option_1 => value_1, option_2 => value_2, ...) >>.
-
-Available options (these are also methods):
-
-=over 4
-
-=item o code2 => $2_letter_code
-
-Specifies the code2 of the country whose subcountry page is to be downloaded.
-
-=back
 
 =head1 Distributions
 
@@ -190,46 +181,25 @@ help on unpacking and installing.
 
 This module is a sub-class of L<Lingua::EN::GivenNames::Database> and consequently inherits its methods.
 
-=head2 code2($code)
-
-Get or set the 2-letter country code of the country or subcountry being processed.
-
-See L</get_subcountry_page()>.
-
-Also, I<code2> is an option to L</new()>.
-
 =head2 get_1_page($url, $data_file)
 
-Download $url and save it in $data_file. $data_file normally takes the form 'data/*.html'.
+Called by get_name_pages().
 
-=head2 get_country_pages()
+Download $url and save it in $data_file. $data_file takes the form 'data/${sex}_english_names*.htm'.
 
-Download the 2 country pages:
+=head2 get_name_pages()
 
-L<http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3>.
+Downloads 20 pages of female given names and 17 pages of male given names.
 
-L<http://en.wikipedia.org/wiki/ISO_3166-2>.
-
-See L<Lingua::EN::GivenNames/Description>.
-
-=head2 get_subcountry_page()
-
-Download 1 subcountry page, e.g. http://en.wikipedia.org/wiki/ISO_3166:$code2.html.
-
-Warning. The 2-letter code of the subcountry must be set with $self -> code2('XX') before calling this
-method.
-
-See L<Lingua::EN::GivenNames/Description>.
-
-=head2 get_subcountry_pages()
-
-Download all subcountry pages which have not been downloaded.
-
-See L<Lingua::EN::GivenNames/Description>.
+See scripts/get.name.pages.pl.
 
 =head2 new()
 
 See L</Constructor and initialization>.
+
+=head2 url()
+
+Returns the string 'http://www.20000-names.com/'.
 
 =head1 FAQ
 

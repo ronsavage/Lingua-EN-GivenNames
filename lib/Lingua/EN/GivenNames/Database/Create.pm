@@ -331,19 +331,13 @@ This is the class's contructor.
 
 Usage: C<< Lingua::EN::GivenNames::Database::Create -> new() >>.
 
-This method takes a hash of options.
-
-Call C<new()> as C<< new(option_1 => value_1, option_2 => value_2, ...) >>.
-
-Available options: None.
-
 =head1 Methods
 
 This module is a sub-class of L<Lingua::EN::GivenNames::Database> and consequently inherits its methods.
 
 =head2 create_all_tables()
 
-Create these tables: forms, kinds, meanings, names, originals, sexes, sources.
+Create these tables: forms, kinds, meanings, names, originals, ratings, sexes, sources.
 
 =head2 create_${name}_table()
 

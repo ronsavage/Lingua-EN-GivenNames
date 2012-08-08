@@ -43,6 +43,27 @@ sub get_name_count
 
 } # End of get_name_count.
 
+# ----------------------------------------------
+
+sub get_table_names
+{
+	my($self) = @_;
+
+	return
+	{
+		derivation => 'derivations',
+		form       => 'forms',
+		kind       => 'kinds',
+		meaning    => 'meanings',
+		name       => 'names',
+		original   => 'originals',
+		rating     => 'ratings',
+		sex        => 'sexes',
+		source     => 'sources',
+	};
+
+} # End of get_table_names.
+
 # -----------------------------------------------
 
 sub get_tables
@@ -51,7 +72,7 @@ sub get_tables
 
 	my(%data);
 
-	for my $table_name (values %{$self -> table_names})
+	for my $table_name (values %{$self -> get_table_names})
 	{
 		$data{$table_name} = DBIx::Table2Hash -> new
 		(
@@ -151,7 +172,7 @@ sub read_names_table
 		};
 	}
 
-	return [sort{$$a{name} cmp $$b{name} } @name];
+	return [sort{$$a{fc_name} cmp $$b{fc_name} } @name];
 
 } # End of read_names_table.
 
@@ -159,8 +180,8 @@ sub read_names_table
 
 sub report_name
 {
-	my($self) = @_;
-	my($name) = ucfirst lc $self -> name;
+	my($self, $name) = @_;
+	my($name)        = ucfirst lc ($name || $self -> name);
 
 	die "No name specified\n" if (! $name);
 
@@ -215,7 +236,7 @@ sub report_stop_words
 	my($data)       = $self -> get_tables;
 	my($stop_words) = Lingua::EN::StopWordList -> new -> words;
 
-	for my $table_name (grep{! /names/} values %{$self -> table_names})
+	for my $table_name (grep{! /names/} values %{$self -> get_table_names})
 	{
 		my($result) = List::Compare -> new($stop_words, [map{$$data{$table_name}{$_}{name} } keys %{$$data{$table_name} }]);
 		my(@match)  = $result -> get_intersection;
@@ -231,27 +252,6 @@ sub report_stop_words
 	return 0;
 
 } # End of report_stop_words.
-
-# ----------------------------------------------
-
-sub table_names
-{
-	my($self) = @_;
-
-	return
-	{
-		derivation => 'derivations',
-		form       => 'forms',
-		kind       => 'kinds',
-		meaning    => 'meanings',
-		name       => 'names',
-		original   => 'originals',
-		rating     => 'ratings',
-		sex        => 'sexes',
-		source     => 'sources',
-	};
-
-} # End of table_names.
 
 # -----------------------------------------------
 
@@ -270,11 +270,9 @@ See L<Lingua::EN::GivenNames/Synopsis> for a long synopsis.
 =head1 Description
 
 Documents the methods end-users need to access the SQLite database,
-I<www.scraper.wikipedia.iso3166.sqlite>, which ships with this distro.
+I<lingua.en.givennames.sqlite>, which ships with this distro.
 
-See L<Lingua::EN::GivenNames/Description> for a long description.
-
-See scripts/export.as.csv.pl, scripts/export.as.html.pl and scripts/report.statistics.pl.
+See L<Lingua::EN::GivenNames/Description> for a long description. See also scripts/*.pl.
 
 =head1 Distributions
 
@@ -307,6 +305,14 @@ This is the hashref of attributes passed to L<DBI>'s I<connect()> method.
 
 Default: {AutoCommit => 1, RaiseError => 1, sqlite_unicode => 1}
 
+=item o name => $string
+
+Used to specify a given name which scripts/report.name.pl uses as a key into the database.
+
+Default: ''.
+
+See L</report_name([$name])> below for sample code.
+
 =back
 
 =head1 Methods
@@ -323,23 +329,115 @@ Also, I<attributes> is an option to L</new()>.
 
 Returns the result of: 'select count(*) from names'.
 
+=head2 get_table_names()
+
+Returns a hashref where the keys are the English singluar versions of the names of the table, and the values
+are the actual table names.
+
+=head2 get_tables()
+
+Returns a hashref whose keys are the table names as returned by sub get_table_names().
+
+The values for these keys are hashrefs of all the data in the corresponding table, as returned by
+L<DBIx::Table2Hash>'s select_hashref() method.
+
+These nested hashrefs are keys by the primary key (integer) of each table.
+
+Consequently, get_tables() returns all data for all tables.
+
+See the source code for sub read_names_table() for how to access such data.
+
+=head2 name($string)
+
+Gets and sets the name attribute, as used by scripts/report.name.pl.
+
+Also, I<name> is an option to L</new()>.
+
 =head2 new()
 
 See L</Constructor and initialization>.
 
+=head2 page_counts()
+
+Returns a hashref of the number of web pages dedicated to female and male names:
+
+	{
+		female => 20,
+		male   => 17,
+	}
+
+Used by L<Lingua::EN::GivenNames::Database::Download>.
+
 =head2 read_names_table()
 
-Returns a hashref of hashrefs for this SQL: 'select * from names'.
+Returns an arrayref of hashrefs of names, sorted by fc_name.
 
-The key of the hashref is the primary key (integer) of the I<names> table.
+Each element in @$names contains data for 1 record in the database, and has these keys
+(in alphabetical order):
 
-This is discussed further in L<Lingua::EN::GivenNames/Methods which return hashrefs>.
+	{
+		derivation => The derivation,
+		fc_name    => The case-folded name,
+		form       => The form,
+		id         => The primary key of this record,
+		kind       => The kind,
+		meaning    => The meaning,
+		name       => The name,
+		original   => The original (name),
+		rating     => The rating (relability indicator),
+		sex        => The sex,
+		source     => The source (language or name),
+	}
 
-=head2 verbose($integer)
+This is discussed further in L<Lingua::EN::GivenNames/Basic Usage> and L<Lingua::EN::GivenNames/FAQ>.
 
-Get or set the verbosity level.
+=head2 report_name([$name])
 
-Also, I<verbose> is an option to L</new()>.
+Here, [] indicate an optional parameter.
+
+Prints the result of searching the I<names> table for a name specified either with the $name parameter, or via
+the name parameter to L</new()>.
+
+Sample usage:
+
+	perl scripts/report.name.pl -n Zoe
+	outputs:
+	derivation  Greek name, meaning "life"
+	fc_name     zoe
+	form        name
+	id          3962
+	kind        Greek
+	meaning     "life"
+	name        Zoe
+	original    -
+	rating      meaning
+	sex         female
+	source      -
+
+=head2 report_statistics()
+
+Currently prints these database statistics:
+
+	Table            Records
+	derivations         3062
+	forms                 15
+	kinds                 52
+	meanings            1356
+	names               3967
+	originals           2393
+	ratings                5
+	sexes                  2
+	sources               56
+
+=head2 report_stop_words()
+
+This uses Lingua::EN::StopWordList to report any stop words which happened to be picked up by the regexps
+used to parse the web page data.
+
+Currently prints this report:
+
+	Table 'sources' contains these stop words: of
+	Table 'forms' contains these stop words: from, name
 
 =head1 FAQ
 

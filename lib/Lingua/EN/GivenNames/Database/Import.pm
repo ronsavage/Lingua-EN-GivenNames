@@ -176,7 +176,7 @@ sub import_derivations
 
 	$self -> log(debug => "Skipping $duplicate duplicate derivations");
 
-	my($table_name) = $self -> table_names;
+	my($table_name) = $self -> get_table_names;
 
 	my(%foreign_key);
 
@@ -383,7 +383,7 @@ EOS
 			(".+")               # 7 => Meaning.
 			/x,
 	);
-	my($table_name) = $self -> table_names;
+	my($table_name) = $self -> get_table_names;
 
 	# Values captured by the above regexp are stored in a set of arrayrefs.
 	# The arrayref $matched{$key}{derivation} is not used.
@@ -547,7 +547,7 @@ sub read_derivations
 
 	$self -> validate_derivations($file_name, \%derivation);
 
-	return \@$line;
+	return $line;
 
 } # End of read_derivations.
 
@@ -556,7 +556,7 @@ sub read_derivations
 sub validate_derivations
 {
 	my($self, $file_name, $derivation) = @_;
-	my($expected_key) = $self -> table_names;
+	my($expected_key) = $self -> get_table_names;
 
 	for my $key (sort keys %$derivation)
 	{
@@ -575,7 +575,7 @@ sub validate_derivations
 sub write_names
 {
 	my($self, $table, $derivation, $foreign_key) = @_;
-	my($table_name) = $self -> table_names;
+	my($table_name) = $self -> get_table_names;
 
 	# Convert strings to foreign keys.
 
@@ -673,6 +673,9 @@ I<lingua.en.givennames.sqlite>, which ships with this distro.
 
 See L<Lingua::EN::GivenNames/Description> for a long description.
 
+Also, it's vital you study L<Lingua::EN::GivenNames/How do the scripts and modules interact to produce the data?>.
+See also scripts/import.sh for the order in which they must be run.
+
 =head1 Distributions
 
 This module is available as a Unix-style distro (*.tgz).
@@ -696,7 +699,31 @@ This module is a sub-class of L<Lingua::EN::GivenNames::Database> and consequent
 
 =head2 extract_derivations()
 
+Extract the derivations from 1 page of either female or male English given names, and write them to
+data/derivations.raw.
+
+This file is opened during each method call in append mode ('>>'), meaning if you wish to
+start from scratch, that file must be deleted before scripts/extract.derivations.pl is run. See
+scripts/import.sh for details.
+
+Since the input data/*.htm files contain data in alphabetical order (usually), the output is also in order.
+
+The output file is processed by parse_derivations().
+
+=head2 generate_derivation($item)
+
+Takes a hashref, $item, and constructs a string which is the derivation of the given name whose components
+are the values of various keys in this hashref.
+
+The string depends on which regexp was used to parse the input.
+
+See L<Lingua::EN::GivenNames/FAQ> for details.
+
 =head2 import_derivations()
+
+Reads the file data/derivations.csv created by sub parse_derivations() by calling read_derivations().
+
+It checks for duplicate records, and then writes all the data to the appropriate database tables.
 
 =head2 new()
 
@@ -704,15 +731,57 @@ See L</Constructor and initialization>.
 
 =head2 parse_derivations()
 
+Reads the file data/derivations.raw created by sub extract_derivations(), applies a set of regexps to each
+line, and writes data/derivations.csv.
+
+Mismatches are written to data/mismatches.log, and a 1-line report is written to data/parse.log.
+
+Clearly, this is where most of the work takes place.
+
+=head2 read_csv_file($file_name)
+
+Reads the given $file_name and returns an arrayref of hashrefs.
+
+The input file must have column headings. These become keys in the hashrefs.
+
 =head2 read_derivations()
 
-=head2 table_names()
+This method is called by sub import_derivations(). It reads and validates data/derivations.raw.
 
-=head2 validate_derivations()
+Also, this method checks to ensure no data is missing, which would indicate a programming error in the
+handling of the output from the regexp processing phase.
 
-=head2 write_names()
+Returns an arrayref.
 
-=head2 write_table()
+=head2 validate_derivations($file_name, $derivation)
+
+$file_name is the file currently being processed (data/derivations.csv), and is used for error messages.
+
+$derivation is a hashref keyed by columns in the input file, so unique entries in each column can be checked.
+
+This method is called by sub read_derivations(). It performs a simple reasonableness check on each input line,
+and also logs, at level I<notice>, all non-ASCII names.
+
+=head2 write_names($table, $derivation, $foreign_key)
+
+$table is the name of the table to write, which is always I<names>.
+
+$derivation is an arrayref of derivations to write.
+
+$foreign_key is a hashref of primary keys returned by L</write_table($table, $item)> for each table other than
+the I<names> table.
+
+Called by sub import_derivations() and writes the I<names> table.
+
+=head2 write_table($table, $item)
+
+$table is the name of the table to write.
+
+$item is an arrayref of values to write.
+
+Called by sub import_derivations() and writes all tables except the I<names> table.
+
+Returns a hashref of primary key ids for use as foreign keys when the I<names> table is written.
 
 =head1 FAQ
 
