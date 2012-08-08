@@ -214,7 +214,7 @@ sub new
 
 =head1 NAME
 
-Lingua::EN::GivenNames::Database::Export - Export lingua.en.givennames.sqlite as CSV and HTML
+Lingua::EN::GivenNames::Database::Export - Export lingua.en.givennames.sqlite as CSV or HTML
 
 =head1 Synopsis
 
@@ -225,9 +225,9 @@ See L<Lingua::EN::GivenNames/Synopsis>.
 Documents the methods end-users need to export the SQLite database,
 I<lingua.en.givennames.sqlite>, which ships with this distro, as either CSV or HTML.
 
-See scripts/export.as.csv.pl and scripts/export.as.html.pl.
+See scripts/export.pl.
 
-The input to these scripts is shipped as share/lingua.en.givennames.sqlite.
+The input to this scripts is shipped as share/lingua.en.givennames.sqlite.
 
 The output of these scripts is shipped as:
 
@@ -270,7 +270,7 @@ Available options (these are also methods):
 
 Specify the name of the CSV file to which given name data is exported.
 
-Default: 'names.csv'.
+Default: ''.
 
 =item o web_page_file => $a_html_file_name
 
@@ -280,7 +280,7 @@ See htdocs/assets/templates/locale/givennames/en/given.names.tx for the web page
 
 *.tx files are processed with L<Text::Xslate>.
 
-Default: 'given.names.html'.
+Default: ''.
 
 =back
 
@@ -290,21 +290,23 @@ This module is a sub-class of L<Lingua::EN::GivenNames::Database> and consequent
 
 =head2 as_csv()
 
-Export the SQLite database to a CSV file.
+Export the SQLite database to the CSV file named with the I<csv_file> parameter to L</new()>.
 
 =head2 as_html()
 
-Export the SQLite database to a HTML file.
+Export the SQLite database to the HTML file named with the I<web_page_file> parameter to L</new()>.
 
 =head2 build_name_data()
 
 Builds part of a HTML table, and returns an arrayref of arrayrefs of hashrefs suitable for L<Text::Xslate>.
 
-=head2 names_file($file_name)
+=head2 csv_file($file_name)
 
 Get or set the name of the CSV file to which given name data is exported.
 
-Also, I<names_file> is an option to L</new()>.
+Also, I<csv_file> is an option to L</new()>.
+
+=head2 export()
 
 =head2 new()
 
