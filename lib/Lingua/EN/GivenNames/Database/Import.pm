@@ -660,7 +660,7 @@ sub write_table
 
 =head1 NAME
 
-Lingua::EN::GivenNames::Database::Import - Part of the interface to lingua.en.givennames.sqlite
+Lingua::EN::GivenNames::Database::Import - An SQLite database of derivations of English given names
 
 =head1 Synopsis
 

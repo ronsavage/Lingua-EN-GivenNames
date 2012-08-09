@@ -181,7 +181,7 @@ sub read_names_table
 sub report_name
 {
 	my($self, $name) = @_;
-	my($name)        = ucfirst lc ($name || $self -> name);
+	$name            = ucfirst lc ($name || $self -> name);
 
 	die "No name specified\n" if (! $name);
 
@@ -261,7 +261,7 @@ sub report_stop_words
 
 =head1 NAME
 
-Lingua::EN::GivenNames::Database - The interface to lingua.en.givennames.sqlite
+Lingua::EN::GivenNames::Database - An SQLite database of derivations of English given names
 
 =head1 Synopsis
 

@@ -74,7 +74,6 @@ sub as_html
 	my($name_data) = $self -> build_names_data;
 
 	my($jquery_stuff);
-	my($thead);
 
 	if ($self -> jquery && $$config{_}{jquery_url})
 	{
@@ -84,7 +83,9 @@ sub as_html
 <script type="text/javascript" src="$$config{_}{jquery_url}/media/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" charset="utf-8">\$(document).ready(function(){\$('#result_table').dataTable();});</script>
 EOS
-		$thead = <<EOS;
+	}
+
+	my($thead) = <<EOS;
 <thead>
 <tr>
 	<td>Id</td>
@@ -95,19 +96,18 @@ EOS
 </thead>
 EOS
 
-	}
-
 	open(OUT, '>', $self -> web_page_file) || die "Can't open file: " . $self -> web_page_file . "\n";
 	binmode(OUT);
 	print OUT $self -> templater -> render
 		(
 			'given.names.tx',
 			{
+				border      => $jquery_stuff ? 0 : 1, # Turn on borders if jquery is off.
 				default_css => "$$config{_}{css_url}/default.css",
 				jquery      => mark_raw($jquery_stuff), # May be undef.
 				name_count  => $#$name_data + 1,
 				name_data   => $name_data,
-				thead       => mark_raw($thead), # May be undef.
+				thead       => mark_raw($thead),
 				version     => $VERSION,
 			}
 		);
@@ -214,7 +214,7 @@ sub new
 
 =head1 NAME
 
-Lingua::EN::GivenNames::Database::Export - Export lingua.en.givennames.sqlite as CSV or HTML
+Lingua::EN::GivenNames::Database::Export - An SQLite database of derivations of English given names
 
 =head1 Synopsis
 
@@ -225,11 +225,7 @@ See L<Lingua::EN::GivenNames/Synopsis>.
 Documents the methods end-users need to export the SQLite database,
 I<lingua.en.givennames.sqlite>, which ships with this distro, as either CSV or HTML.
 
-See scripts/export.pl.
-
-The input to this scripts is shipped as share/lingua.en.givennames.sqlite.
-
-The output of these scripts is shipped as:
+See scripts/export.pl. The output of this script is shipped as:
 
 =over 4
 
@@ -237,7 +233,9 @@ The output of these scripts is shipped as:
 
 =item o data/given.names.html
 
-This file is on-line at: L<http://savage.net.au/Perl-modules/html/Locale/GivenNames/en/given.names.html>.
+The latter file is on-line at: L<http://savage.net.au/Perl-modules/html/given.names.html>.
+
+Note: This page was created with export.pl's I<jquery> switch set to 1.
 
 =back
 

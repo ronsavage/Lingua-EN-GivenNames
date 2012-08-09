@@ -137,7 +137,7 @@ sub new
 
 =head1 NAME
 
-Lingua::EN::GivenNames::Database::Download - Download various pages http://www.20000-names.com/
+Lingua::EN::GivenNames::Database::Download - An SQLite database of derivations of English given names
 
 =head1 Synopsis
 

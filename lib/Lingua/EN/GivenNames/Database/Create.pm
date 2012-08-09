@@ -301,7 +301,7 @@ sub report
 
 =head1 NAME
 
-Lingua::EN::GivenNames::Database::Create - Create/drop tables in lingua.en.givennames.sqlite
+Lingua::EN::GivenNames::Database::Create - An SQLite database of derivations of English given names
 
 =head1 Synopsis
 
