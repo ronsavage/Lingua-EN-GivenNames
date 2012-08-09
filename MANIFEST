@@ -1,7 +1,6 @@
 Build.PL
 Changelog.ini
 CHANGES
-data/dbi.schema.svg
 data/derivations.csv
 data/derivations.raw
 data/female_english_names.htm
@@ -45,6 +44,7 @@ data/male_english_names_16.htm
 data/male_english_names_17.htm
 data/mismatches.log
 data/parse.log
+data/schema.png
 data/unparsable.txt
 htdocs/assets/css/lingua/en/givennames/default.css
 htdocs/assets/css/lingua/en/givennames/fancy.table.css
@@ -73,8 +73,10 @@ scripts/get.name.pages.pl
 scripts/import.derivations.pl
 scripts/import.sh
 scripts/parse.derivations.pl
+scripts/pod2html.sh
 scripts/report.name.pl
 scripts/report.statistics.pl
+scripts/report.stop.words.pl
 scripts/test.pattern.pl
 share/.ht.lingua.en.givennames.conf
 share/lingua.en.givennames.sqlite

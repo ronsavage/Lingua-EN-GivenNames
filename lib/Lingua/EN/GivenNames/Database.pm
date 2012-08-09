@@ -104,6 +104,11 @@ sub _init
 	$self              = $self -> SUPER::_init($arg);
 
 	$self -> dsn('dbi:SQLite:dbname=' . $self -> sqlite_file);
+
+	$self -> dsn('dbi:Pg:dbname=test');
+	$self -> username('testuser');
+	$self -> password('testpass');
+
 	$self -> dbh(DBI -> connect($self -> dsn, $self -> username, $self -> password, $self -> attributes) ) || die $DBI::errstr;
 	$self -> dbh -> do('PRAGMA foreign_keys = ON') if ($self -> dsn =~ /SQLite/i);
 

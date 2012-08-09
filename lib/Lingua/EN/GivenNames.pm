@@ -411,7 +411,7 @@ It is installed into the distro's shared dir, along with the database.
 
 =head2 What is the database schema?
 
-See data/dbi.schema.png. This image was output by L<GraphViz2::DBI>, with a bit of fiddling.
+See data/schema.png.
 
 The table names are: forms, kinds, meanings, names, originals, ratings, sexes and sources,
 with names being the main table.
@@ -422,7 +422,7 @@ These are the columns in the names table:
 
 =item o derivation_id
 
-This is a foreign key pointing to the id column of the derivations table. See data/dbi.schema.svg.
+This is a foreign key pointing to the id column of the derivations table. See data/schema.png.
 
 The name field in the derivations table is constructed from various fields in the input,
 in one of the following ways. These fields are extracted from the input using capturing parentheses
