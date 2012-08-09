@@ -24,7 +24,6 @@ WriteMakefile
 	PL_FILES  => {},
 	PREREQ_PM =>
 	{
-		base                     => 2.16,
 		Config::Tiny             => 2.14,
 		DBI                      => 1.622,
 		DBIx::Admin::CreateTable => 2.07,
@@ -42,6 +41,7 @@ WriteMakefile
 		Hash::FieldHash          => 0.12,
 		IO::File                 => 1.15,
 		Lingua::EN::StopWordList => 1.00,
+		List::Compare            => 0.37,
 		open                     => 1.08,
 		parent                   => 0.225,
 		Pod::Usage               => 1.51,
@@ -51,8 +51,6 @@ WriteMakefile
 		Text::CSV                => 1.21,
 		Text::Xslate             => 1.5015,
 		Unicode::CaseFold        => 0.02,
-		Unicode::Normalize       => 1.14,
-		utf8                     => 1.09,
 		warnings                 => 0.00,
 	},
 	VERSION_FROM => 'lib/Lingua/EN/GivenNames.pm',

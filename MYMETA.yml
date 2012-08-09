@@ -50,17 +50,15 @@ requires:
   Hash::FieldHash: 0.12
   IO::File: 1.15
   Lingua::EN::StopWordList: 1
+  List::Compare: 0.37
   Pod::Usage: 1.51
   Text::CSV: 1.21
   Text::Xslate: 1.5015
   Unicode::CaseFold: 0.02
-  Unicode::Normalize: 1.14
-  base: 2.16
   feature: 1.2
   open: 1.08
   parent: 0.225
   strict: 0
-  utf8: 1.09
   warnings: 0
 resources:
   license: http://opensource.org/licenses/artistic-license.php
