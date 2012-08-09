@@ -305,7 +305,9 @@ Lingua::EN::GivenNames::Database::Create - An SQLite database of derivations of 
 
 =head1 Synopsis
 
-See L<Lingua::EN::GivenNames/Synopsis>.
+See L<Lingua::EN::GivenNames/Synopsis> for a long synopsis.
+
+See also L<Lingua::EN::GivenNames/How do the scripts and modules interact to produce the data?>.
 
 =head1 Description
 

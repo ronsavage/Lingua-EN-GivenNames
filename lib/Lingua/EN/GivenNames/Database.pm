@@ -267,6 +267,8 @@ Lingua::EN::GivenNames::Database - An SQLite database of derivations of English 
 
 See L<Lingua::EN::GivenNames/Synopsis> for a long synopsis.
 
+See also L<Lingua::EN::GivenNames/How do the scripts and modules interact to produce the data?>.
+
 =head1 Description
 
 Documents the methods end-users need to access the SQLite database,

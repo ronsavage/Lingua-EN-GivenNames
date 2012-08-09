@@ -90,12 +90,18 @@ Lingua::EN::GivenNames - An SQLite database of derivations of English given name
 
 =head1 Synopsis
 
-www.20000-names.com I<has been scraped>. You do not need to run the script which downloads pages from there.
+L<http://www.20000-names.com> I<has been scraped> for English given names. You do not need to run the script
+which downloads pages from there. That web site, though, does have names for 13 other languages, if you wish
+to adapt this distro for a different language.
 
-Just use the SQLite database shipped with this module, as discussed next, or one of the export scripts.
+So, just use the SQLite database shipped with this module, as discussed next, or scripts/export.pl to output to
+CSV or HTML.
 
-The database has been export as html: L<http://savage.net.au/Perl-modules/html/given.names.html>.
-This page was created with scripts/export.pl's I<jquery> switch set to 1.
+The database has been exported as L<HTML|http://savage.net.au/Perl-modules/html/given.names.html>.
+This on-line version was created with scripts/export.pl's I<jquery> switch set to 1.
+
+The database is also shipped as data/given.names.csv and data/given.names.html, although this latter page
+was created with scripts/export.pl's I<jquery> switch set to 0.
 
 =head2 Basic Usage
 
@@ -109,7 +115,7 @@ This is the simplest way to access the data.
 
 	my($names) = $database -> read_names_table;
 
-Each element in @$names contains data for 1 record in the database, and has these keys
+Each element in @$names contains a hashref of data for 1 record in the database, and has these keys
 (in alphabetical order):
 
 	{
@@ -135,12 +141,12 @@ See L</FAQ> entries for details.
 
 =head2 Scripts which output to a file
 
-All scripts respond to the -h option.
+scripts/export.pl responds to the -h option.
 
 Some examples, with output files that happen to be the defaults:
 
-	shell>perl scripts/export.as.csv.pl  -cvs_file      given.names.csv
-	shell>perl scripts/export.as.html.pl -web_page_file given.names.html
+	shell>perl scripts/export.pl -cvs_file      given.names.csv
+	shell>perl scripts/export.pl -web_page_file given.names.html -j 1
 
 =head1 Description
 
@@ -649,6 +655,10 @@ data/parse.log. It uses L<Lingua::EN::GivenNames::Database::Import>.
 
 Also, this script uses data/unparsable.txt to skip some names. Further, it currently skips names which
 are not all ASCII characters.
+
+=item o scripts/pod2html.sh
+
+A bash script to convert all *.pm files into HTML under my web server's doc root.
 
 =item o scripts/report.name.pl
 
