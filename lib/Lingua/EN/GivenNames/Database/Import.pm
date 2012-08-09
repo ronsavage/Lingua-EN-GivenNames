@@ -189,6 +189,10 @@ sub import_derivations
 
 	$self -> write_names($$table_name{name}, \@derivation, \%foreign_key);
 
+	# Return 0 for success and 1 for failure.
+
+	return 0;
+
 } # End of import_derivations.
 
 # ----------------------------------------------
@@ -498,6 +502,10 @@ EOS
 
 	$self -> log(debug => "Updated $parse_file_name");
 
+	# Return 0 for success and 1 for failure.
+
+	return 0;
+
 } # End of parse_derivations.
 
 # -----------------------------------------------
@@ -710,12 +718,14 @@ Since the input data/*.htm files contain data in alphabetical order (usually), t
 
 The output file is processed by parse_derivations().
 
+Returns 0 to indicate success.
+
 =head2 generate_derivation($item)
 
 Takes a hashref, $item, and constructs a string which is the derivation of the given name whose components
 are the values of various keys in this hashref.
 
-The string depends on which regexp was used to parse the input.
+The string returned depends on which regexp was used to parse the input.
 
 See L<Lingua::EN::GivenNames/FAQ> for details.
 
@@ -724,6 +734,8 @@ See L<Lingua::EN::GivenNames/FAQ> for details.
 Reads the file data/derivations.csv created by sub parse_derivations() by calling read_derivations().
 
 It checks for duplicate records, and then writes all the data to the appropriate database tables.
+
+Returns 0 to indicate success.
 
 =head2 new()
 
@@ -737,6 +749,8 @@ line, and writes data/derivations.csv.
 Mismatches are written to data/mismatches.log, and a 1-line report is written to data/parse.log.
 
 Clearly, this is where most of the work takes place.
+
+Returns 0 to indicate success.
 
 =head2 read_csv_file($file_name)
 

@@ -339,6 +339,8 @@ This module is a sub-class of L<Lingua::EN::GivenNames::Database> and consequent
 
 Create these tables: forms, kinds, meanings, names, originals, ratings, sexes, sources.
 
+Returns 0 to indicate success.
+
 =head2 create_${name}_table()
 
 Create the I<$name> table.
@@ -346,6 +348,8 @@ Create the I<$name> table.
 =head2 drop_all_tables()
 
 Drop all the tables.
+
+Returns 0 to indicate success.
 
 =head2 drop_table($table_name)
 

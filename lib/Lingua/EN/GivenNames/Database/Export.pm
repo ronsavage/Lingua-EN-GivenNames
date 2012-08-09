@@ -22,8 +22,8 @@ our $VERSION = '1.00';
 
 sub as_csv
 {
-	my($self) = @_;
-
+	my($self, $file_name) = @_;
+	$file_name            ||= $self -> csv_file;
 	my(@row);
 
 	push @row,
@@ -48,7 +48,7 @@ sub as_csv
 		];
 	}
 
-	open(OUT, '>', $self -> csv_file) || die "Can't open file: " . $self -> csv_file . "\n";
+	open(OUT, '>', $file_name) || die "Can't open file: $file_name: $!\n";
 
 	for (@row)
 	{
@@ -57,7 +57,7 @@ sub as_csv
 
 	close OUT;
 
-	$self -> log(debug => 'Wrote ' . $self -> csv_file);
+	$self -> log(debug => "Wrote $file_name");
 
 	# Return 0 for success and 1 for failure.
 
@@ -69,9 +69,10 @@ sub as_csv
 
 sub as_html
 {
-	my($self)      = @_;
-	my($config)    = $self -> config;
-	my($name_data) = $self -> build_names_data;
+	my($self, $file_name) = @_;
+	$file_name            ||= $self -> web_page_file;
+	my($config)           = $self -> config;
+	my($name_data)        = $self -> build_names_data;
 
 	my($jquery_stuff);
 
@@ -96,7 +97,7 @@ EOS
 </thead>
 EOS
 
-	open(OUT, '>', $self -> web_page_file) || die "Can't open file: " . $self -> web_page_file . "\n";
+	open(OUT, '>', $file_name) || die "Can't open file: $file_name: $!\n";
 	binmode(OUT);
 	print OUT $self -> templater -> render
 		(
@@ -114,7 +115,7 @@ EOS
 
 	close OUT;
 
-	$self -> log(debug => 'Wrote ' . $self -> web_page_file);
+	$self -> log(debug => "Wrote $file_name");
 
 	# Return 0 for success and 1 for failure.
 
@@ -235,7 +236,7 @@ See scripts/export.pl. The output of this script is shipped as:
 
 The latter file is on-line at: L<http://savage.net.au/Perl-modules/html/given.names.html>.
 
-Note: This page was created with export.pl's I<jquery> switch set to 1.
+Note: The on-line version was created with export.pl's I<jquery> switch set to 1.
 
 =back
 
@@ -286,17 +287,27 @@ Default: ''.
 
 This module is a sub-class of L<Lingua::EN::GivenNames::Database> and consequently inherits its methods.
 
-=head2 as_csv()
+=head2 as_csv([$file_name])
 
-Export the SQLite database to the CSV file named with the I<csv_file> parameter to L</new()>.
+Here, [] indicate an optional parameter.
 
-=head2 as_html()
+Export the SQLite database to the CSV file named either with the $file_name parameter or with the I<csv_file>
+parameter to L</new()>.
 
-Export the SQLite database to the HTML file named with the I<web_page_file> parameter to L</new()>.
+Returns 0 to indicate success.
+
+=head2 as_html([$file_name])
+
+Here, [] indicate an optional parameter.
+
+Export the SQLite database to the HTML file named either with the $file_name parameter or with the I<web_page_file>
+parameter to L</new()>.
+
+Returns 0 to indicate success.
 
 =head2 build_name_data()
 
-Builds part of a HTML table, and returns an arrayref of arrayrefs of hashrefs suitable for L<Text::Xslate>.
+Builds the rows of a HTML table, and returns an arrayref of arrayrefs of hashrefs suitable for L<Text::Xslate>.
 
 =head2 csv_file($file_name)
 
@@ -305,6 +316,11 @@ Get or set the name of the CSV file to which given name data is exported.
 Also, I<csv_file> is an option to L</new()>.
 
 =head2 export()
+
+Calls as_csv() if the I<csv_file> option was passed to L</new()>, or calls as_html() if the I<web_page_file>
+option was passed to L</new()>. Dies if neither of those options was passed.
+
+Returns 0 to indicate success.
 
 =head2 new()
 

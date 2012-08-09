@@ -187,11 +187,15 @@ Called by get_name_pages().
 
 Download $url and save it in $data_file. $data_file takes the form 'data/${sex}_english_names*.htm'.
 
+Returns 0 to indicate success.
+
 =head2 get_name_pages()
 
 Downloads 20 pages of female given names and 17 pages of male given names.
 
 See scripts/get.name.pages.pl.
+
+Returns the result of the last call to L</get_1_page($url, $data_file)> (which will be 0) to indicate success.
 
 =head2 new()
 
