@@ -653,6 +653,8 @@ This runs all the appropriate scripts in one hit. The output is worth examining 
 Besides outputting data/derivations.csv, this script also outputs data/mismatches.log and
 data/parse.log. It uses L<Lingua::EN::GivenNames::Database::Import>.
 
+See L</TODO> for more about the mismatches file.
+
 Also, this script uses data/unparsable.txt to skip some names. Further, it currently skips names which
 are not all ASCII characters.
 
@@ -734,6 +736,15 @@ database tables. After installation, the database is elsewhere, and read-only, s
 writing to that copy anyway.
 
 After end-user installation, L<File::ShareDir> is used to find the installed version of *.sqlite.
+
+=head2 TODO
+
+Mismatches, output from analyzing the web pages, are shipped in data/mismatches.log. The next step is to
+extend the list of regexps in L<Lingua::EN::GivenNames::Database::Import>'s sub parse_derivations() to
+capture more derivations.
+
+The mismatch file is sorted and reformatted compared to the data/derivations.*, to make it easy to use to
+build new regexps.
 
 =head2 Why don't you use Perl6::Slurp to read files?
 
