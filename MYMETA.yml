@@ -61,5 +61,5 @@ requires:
   strict: 0
   warnings: 0
 resources:
-  license: http://opensource.org/licenses/artistic-license.php
+  license: http://www.perlfoundation.org/artistic_license_1_0
 version: 1.00
