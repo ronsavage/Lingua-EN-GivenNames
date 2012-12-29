@@ -3,7 +3,7 @@ use Module::Build;
 Module::Build -> new
 (
 	module_name    => 'Lingua::EN::GivenNames',
-	license        => 'artistic',
+	license        => 'perl_5',
 	dist_abstract  => 'An SQLite database of derivations of English given names',
 	dist_author    => 'Ron Savage <ron@savage.net.au>',
 	build_requires =>
