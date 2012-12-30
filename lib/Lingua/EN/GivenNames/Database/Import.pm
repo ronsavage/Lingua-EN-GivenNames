@@ -17,9 +17,8 @@ use Hash::FieldHash ':all';
 
 use HTML::TreeBuilder;
 
-use IO::File;
-
 use Text::CSV;
+use Text::CSV::Slurp;
 
 use Unicode::CaseFold;  # For fc().
 
@@ -508,27 +507,13 @@ EOS
 
 } # End of parse_derivations.
 
-# -----------------------------------------------
-
-sub read_csv_file
-{
-	my($self, $file_name) = @_;
-	my($csv) = Text::CSV -> new({allow_whitespace => 1, binary => 1});
-	my($io)  = IO::File -> new($file_name, 'r');
-
-	$csv -> column_names($csv -> getline($io) );
-
-	return $csv -> getline_hr_all($io);
-
-} # End of read_csv_file.
-
 # ----------------------------------------------
 
 sub read_derivations
 {
 	my($self)      = @_;
 	my($file_name) = File::Spec -> catfile($self -> data_dir, 'derivations.csv');
-	my($line)      = $self -> read_csv_file($file_name);
+	my($line)      = Text::CSV::Slurp -> new -> load(file => $file_name, allow_whitespace => 1);
 	my($count)     = 0;
 
 	$self -> log(debug => "File: $file_name. Derivation count: " . scalar @$line);
@@ -753,12 +738,6 @@ Mismatches are written to data/mismatches.log, and a 1-line report is written to
 Clearly, this is where most of the work takes place.
 
 Returns 0 to indicate success.
-
-=head2 read_csv_file($file_name)
-
-Reads the given $file_name and returns an arrayref of hashrefs.
-
-The input file must have column headings. These become keys in the hashrefs.
 
 =head2 read_derivations()
 

@@ -8,7 +8,7 @@ build_requires:
 configure_requires:
   Module::Build: 0.38
 dynamic_config: 0
-generated_by: 'Module::Build version 0.4003, CPAN::Meta::Converter version 2.120630'
+generated_by: 'Module::Build version 0.4003, CPAN::Meta::Converter version 2.120921'
 license: artistic
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -48,11 +48,11 @@ requires:
   HTML::TreeBuilder: 4.2
   HTTP::Tiny: 0.022
   Hash::FieldHash: 0.12
-  IO::File: 1.15
   Lingua::EN::StopWordList: 1
   List::Compare: 0.37
   Pod::Usage: 1.51
   Text::CSV: 1.21
+  Text::CSV::Slurp: 1
   Text::Xslate: 1.5015
   Unicode::CaseFold: 0.02
   feature: 1.2

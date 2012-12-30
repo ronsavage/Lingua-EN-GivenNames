@@ -2,6 +2,7 @@ Revision history for Perl extension Lingua::EN::GivenNames.
 
 1.01  Unreleased
 	- Update DataTables from V 1.9.2 to 1.9.3, in share/.ht.lingua.en.givennames.conf.
+	- Replace sub using IO::File and Text::CSV_XS with Text::CSV::Slurp.
 
 1.00  Wed Aug  2 11:51:00 2012
 	- Original version
