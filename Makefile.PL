@@ -46,7 +46,7 @@ WriteMakefile
 		parent                   => 0.225,
 		Pod::Usage               => 1.51,
 		strict                   => 0.00,
-		Test::Simple             => 0.96,
+		Test::More             => 0.96,
 		Test::Pod                => 1.45,
 		Text::CSV                => 1.21,
 		Text::CSV::Slurp         => 1,
