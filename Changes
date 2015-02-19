@@ -1,6 +1,7 @@
 Revision history for Perl extension Lingua::EN::GivenNames.
 
-1.01  Unreleased
+1.01  Wed Feb 18 16:32:00 2015
+	- Rename CHANGES to Changes as perl CPAN::Spec::Changes.
 	- Update DataTables from V 1.9.2 to 1.9.3, in share/.ht.lingua.en.givennames.conf.
 	- Replace sub using IO::File and Text::CSV_XS with Text::CSV::Slurp.
 

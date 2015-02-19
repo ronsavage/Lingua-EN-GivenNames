@@ -24,7 +24,7 @@ use Unicode::CaseFold;  # For fc().
 
 fieldhash my %page_number => 'page_number';
 
-our $VERSION = '1.00';
+our $VERSION = '1.01';
 
 # ----------------------------------------------
 

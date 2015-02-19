@@ -16,7 +16,7 @@ fieldhash my %jquery        => 'jquery';
 fieldhash my %templater     => 'templater';
 fieldhash my %web_page_file => 'web_page_file';
 
-our $VERSION = '1.00';
+our $VERSION = '1.01';
 
 # -----------------------------------------------
 

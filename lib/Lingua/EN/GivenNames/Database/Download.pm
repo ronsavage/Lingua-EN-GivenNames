@@ -16,7 +16,7 @@ use HTTP::Tiny;
 
 fieldhash my %url => 'url';
 
-our $VERSION = '1.00';
+our $VERSION = '1.01';
 
 # -----------------------------------------------
 

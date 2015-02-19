@@ -21,7 +21,7 @@ fieldhash my %share_dir   => 'share_dir';
 fieldhash my %sqlite_file => 'sqlite_file';
 fieldhash my %verbose     => 'verbose';
 
-our $VERSION = '1.00';
+our $VERSION = '1.01';
 
 # -----------------------------------------------
 
