@@ -58,27 +58,27 @@
    "provides" : {
       "Lingua::EN::GivenNames" : {
          "file" : "lib/Lingua/EN/GivenNames.pm",
-         "version" : "1.00"
+         "version" : "1.01"
       },
       "Lingua::EN::GivenNames::Database" : {
          "file" : "lib/Lingua/EN/GivenNames/Database.pm",
-         "version" : "1.00"
+         "version" : "1.01"
       },
       "Lingua::EN::GivenNames::Database::Create" : {
          "file" : "lib/Lingua/EN/GivenNames/Database/Create.pm",
-         "version" : "1.00"
+         "version" : "1.01"
       },
       "Lingua::EN::GivenNames::Database::Download" : {
          "file" : "lib/Lingua/EN/GivenNames/Database/Download.pm",
-         "version" : "1.00"
+         "version" : "1.01"
       },
       "Lingua::EN::GivenNames::Database::Export" : {
          "file" : "lib/Lingua/EN/GivenNames/Database/Export.pm",
-         "version" : "1.00"
+         "version" : "1.01"
       },
       "Lingua::EN::GivenNames::Database::Import" : {
          "file" : "lib/Lingua/EN/GivenNames/Database/Import.pm",
-         "version" : "1.00"
+         "version" : "1.01"
       }
    },
    "release_status" : "stable",
@@ -87,5 +87,5 @@
          "http://www.perlfoundation.org/artistic_license_2_0"
       ]
    },
-   "version" : "1.00"
+   "version" : "1.01"
 }
