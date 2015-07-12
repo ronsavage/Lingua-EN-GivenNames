@@ -16,7 +16,7 @@ use Types::Standard qw/Int Str/;
 
 has config =>
 (
-	default  => sub{return '.ht.lingua.en.givennames.conf'},
+	default  => sub{return ''},
 	is       => 'rw',
 	isa      => Str,
 	required => 0,
@@ -24,7 +24,7 @@ has config =>
 
 has config_file =>
 (
-	default  => sub{return ''},
+	default  => sub{return '.ht.lingua.en.givennames.conf'},
 	is       => 'rw',
 	isa      => Str,
 	required => 0,
@@ -82,7 +82,13 @@ sub BUILD
 	(my $package = __PACKAGE__) =~ s/::/-/g;
 
 	$self -> share_dir($ENV{AUTHOR_TESTING} ? 'share' : File::ShareDir::dist_dir($package) );
+
+	say 'share_dir:   ', $self -> share_dir;
+	say 'config_file: ', $self -> config_file;
+	say 'catfile:     ', File::Spec -> catfile($self -> share_dir, $self -> config_file);
+
 	$self -> config_file(File::Spec -> catfile($self -> share_dir, $self -> config_file) );
+
 	$self -> config(Config::Tiny -> read($self -> config_file) );
 
 	die Config::Tiny -> errstr if (Config::Tiny -> errstr);
@@ -784,6 +790,10 @@ Because I found it (V 0.051000) did not respect the 'raw' file encoding option I
 
 The web site L<20000-names.com> has names in various other languages, for those wishing the adapt
 this code to deal with those cases.
+
+=head1 REPOSITORY
+
+L<https://github.com/ronsavage/Lingua-EN-GivenNames>
 
 =head1 Support
 

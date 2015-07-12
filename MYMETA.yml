@@ -3,7 +3,8 @@ abstract: 'An SQLite database of derivations of English given names'
 author:
   - 'Ron Savage <ron@savage.net.au>'
 build_requires:
-  ExtUtils::MakeMaker: '0'
+  ExtUtils::MakeMaker: '6.59'
+  Test::More: '0.98'
 configure_requires:
   ExtUtils::MakeMaker: '0'
 dynamic_config: 0
@@ -60,6 +61,7 @@ requires:
   feature: '1.2'
   open: '1.08'
   parent: '0.225'
+  perl: '5.014'
   strict: '0'
   warnings: '0'
 resources:

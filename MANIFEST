@@ -52,6 +52,16 @@ htdocs/assets/templates/lingua/en/givennames/basic.column.tx
 htdocs/assets/templates/lingua/en/givennames/basic.table.tx
 htdocs/assets/templates/lingua/en/givennames/fancy.table.tx
 htdocs/assets/templates/lingua/en/givennames/given.names.tx
+inc/Module/Install.pm
+inc/Module/Install/Base.pm
+inc/Module/Install/Can.pm
+inc/Module/Install/Fetch.pm
+inc/Module/Install/Makefile.pm
+inc/Module/Install/Metadata.pm
+inc/Module/Install/Share.pm
+inc/Module/Install/Win32.pm
+inc/Module/Install/WriteAll.pm
+lib/MarpaX/Grammar/Parser.pm
 lib/Lingua/EN/GivenNames.pm
 lib/Lingua/EN/GivenNames/Database.pm
 lib/Lingua/EN/GivenNames/Database/Create.pm

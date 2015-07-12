@@ -16,7 +16,8 @@
    "prereqs" : {
       "build" : {
          "requires" : {
-            "ExtUtils::MakeMaker" : "0"
+            "ExtUtils::MakeMaker" : "6.59",
+            "Test::More" : "0.98"
          }
       },
       "configure" : {
@@ -53,6 +54,7 @@
             "feature" : "1.2",
             "open" : "1.08",
             "parent" : "0.225",
+            "perl" : "5.014",
             "strict" : "0",
             "warnings" : "0"
          }

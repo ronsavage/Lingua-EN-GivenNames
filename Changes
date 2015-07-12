@@ -6,6 +6,7 @@ Revision history for Perl extension Lingua::EN::GivenNames.
 	- Remove Build.PL. Ship only Makefile.PL.
 	- Remove reference to feature unicode_strings from all modules.
 	- Replace Hash::FieldHash with Moo and Types::Standard.
+	- Add github repository https://github.com/ronsavage/Lingua-EN-GivenNames.
 
 1.01  Wed Feb 18 16:32:00 2015
 	- Rename CHANGES to Changes as perl CPAN::Spec::Changes.
