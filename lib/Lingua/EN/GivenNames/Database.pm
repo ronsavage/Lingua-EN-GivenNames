@@ -1,7 +1,6 @@
 package Lingua::EN::GivenNames::Database;
 
-use feature qw/say unicode_strings/;
-use open qw(:std :utf8);
+use feature 'say';
 use parent 'Lingua::EN::GivenNames';
 use strict;
 use warnings;
@@ -14,24 +13,129 @@ use DBIx::Table2Hash;
 
 use File::Slurp; # For read_dir().
 
-use Hash::FieldHash ':all';
-
 use Lingua::EN::StopWordList;
 
 use List::Compare;
 
-fieldhash my %attributes  => 'attributes';
-fieldhash my %creator     => 'creator';
-fieldhash my %dbh         => 'dbh';
-fieldhash my %dsn         => 'dsn';
-fieldhash my %engine      => 'engine';
-fieldhash my %name        => 'name';
-fieldhash my %page_counts => 'page_counts';
-fieldhash my %password    => 'password';
-fieldhash my %time_option => 'time_option';
-fieldhash my %username    => 'username';
+use Moo;
 
-our $VERSION = '1.01';
+use Types::Standard qw/HashRef Str/;
+
+has attributes =>
+(
+	default  => sub{return {AutoCommit => 1, RaiseError => 1, sqlite_unicode => 1} },
+	is       => 'rw',
+	isa      => HashRef,
+	required => 0,
+);
+
+has creator =>
+(
+	default  => sub{return ''},
+	is       => 'rw',
+	isa      => Str,
+	required => 0,
+);
+
+has dbh =>
+(
+	default  => sub{return ''},
+	is       => 'rw',
+	isa      => Str,
+	required => 0,
+);
+
+has dsn =>
+(
+	default  => sub{return ''},
+	is       => 'rw',
+	isa      => Str,
+	required => 0,
+);
+
+has engine =>
+(
+	default  => sub{return ''},
+	is       => 'rw',
+	isa      => Str,
+	required => 0,
+);
+
+has name =>
+(
+	default  => sub{return ''},
+	is       => 'rw',
+	isa      => Str,
+	required => 0,
+);
+
+has page_counts =>
+(
+	default  => sub{return {female => 20, male => 17} },
+	is       => 'rw',
+	isa      => HashRef,
+	required => 0,
+);
+
+has password =>
+(
+	default  => sub{return ''},
+	is       => 'rw',
+	isa      => Str,
+	required => 0,
+);
+
+has time_option =>
+(
+	default  => sub{return ''},
+	is       => 'rw',
+	isa      => Str,
+	required => 0,
+);
+
+has username =>
+(
+	default  => sub{return ''},
+	is       => 'rw',
+	isa      => Str,
+	required => 0,
+);
+
+our $VERSION = '1.02';
+
+# -----------------------------------------------
+
+sub BUILD
+{
+	my($self) = @_;
+
+	$self -> dsn('dbi:SQLite:dbname=' . $self -> sqlite_file);
+	$self -> dsn('dbi:Pg:dbname=test');
+	$self -> username('testuser');
+	$self -> password('testpass');
+	$self -> dbh(DBI -> connect($self -> dsn, $self -> username, $self -> password, $self -> attributes) ) || die $DBI::errstr;
+	$self -> dbh -> do('PRAGMA foreign_keys = ON') if ($self -> dsn =~ /SQLite/i);
+
+	$self -> creator
+		(
+		 DBIx::Admin::CreateTable -> new
+		 (
+		  dbh     => $self -> dbh,
+		  verbose => 0,
+		 )
+		);
+
+	$self -> engine
+		(
+		 $self -> creator -> db_vendor =~ /(?:Mysql)/i ? 'engine=innodb' : ''
+		);
+
+	$self -> time_option
+		(
+		 $self -> creator -> db_vendor =~ /(?:MySQL|Postgres)/i ? '(0) without time zone' : ''
+		);
+
+} # End of BUILD.
 
 # ----------------------------------------------
 
@@ -85,67 +189,6 @@ sub get_tables
 	return \%data;
 
 } # End of get_tables.
-
-# -----------------------------------------------
-
-sub _init
-{
-	my($self, $arg)    = @_;
-	$$arg{attributes}  ||= {AutoCommit => 1, RaiseError => 1, sqlite_unicode => 1}; # Caller can set.
-	$$arg{creator}     = '';
-	$$arg{dbh}         = '';
-	$$arg{dsn}         = '';
-	$$arg{engine}      = '';
-	$$arg{name}        ||= ''; # Caller can set.
-	$$arg{page_counts} = {female => 20, male => 17};
-	$$arg{password}    = '';
-	$$arg{time_option} = '';
-	$$arg{username}    = '';
-	$self              = $self -> SUPER::_init($arg);
-
-	$self -> dsn('dbi:SQLite:dbname=' . $self -> sqlite_file);
-
-	$self -> dsn('dbi:Pg:dbname=test');
-	$self -> username('testuser');
-	$self -> password('testpass');
-
-	$self -> dbh(DBI -> connect($self -> dsn, $self -> username, $self -> password, $self -> attributes) ) || die $DBI::errstr;
-	$self -> dbh -> do('PRAGMA foreign_keys = ON') if ($self -> dsn =~ /SQLite/i);
-
-	$self -> creator
-		(
-		 DBIx::Admin::CreateTable -> new
-		 (
-		  dbh     => $self -> dbh,
-		  verbose => 0,
-		 )
-		);
-
-	$self -> engine
-		(
-		 $self -> creator -> db_vendor =~ /(?:Mysql)/i ? 'engine=innodb' : ''
-		);
-
-	$self -> time_option
-		(
-		 $self -> creator -> db_vendor =~ /(?:MySQL|Postgres)/i ? '(0) without time zone' : ''
-		);
-
-	return $self;
-
-} # End of _init.
-
-# -----------------------------------------------
-
-sub new
-{
-	my($class, %arg) = @_;
-	my($self)        = bless {}, $class;
-	$self            = $self -> _init(\%arg);
-
-	return $self;
-
-}	# End of new.
 
 # ----------------------------------------------
 

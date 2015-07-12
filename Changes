@@ -1,5 +1,12 @@
 Revision history for Perl extension Lingua::EN::GivenNames.
 
+1.02  Sun Jul 12 11:36:00 2015
+	- Remove the line which reads 'use open qw(:std :utf8);'. See RT#105798.
+	- Move t/pod.t to xt/author/.
+	- Remove Build.PL. Ship only Makefile.PL.
+	- Remove reference to feature unicode_strings from all modules.
+	- Replace Hash::FieldHash with Moo and Types::Standard.
+
 1.01  Wed Feb 18 16:32:00 2015
 	- Rename CHANGES to Changes as perl CPAN::Spec::Changes.
 	- Update DataTables from V 1.9.2 to 1.9.3, in share/.ht.lingua.en.givennames.conf.

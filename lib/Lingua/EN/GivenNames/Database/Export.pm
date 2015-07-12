@@ -1,22 +1,50 @@
 package Lingua::EN::GivenNames::Database::Export;
 
-use feature qw/say unicode_strings/;
-use open qw/:std :utf8/;
+use feature 'say';
 use parent 'Lingua::EN::GivenNames::Database';
 use strict;
 use warnings;
 use warnings qw(FATAL utf8);
 
-use Hash::FieldHash ':all';
+use Moo;
 
 use Text::Xslate 'mark_raw';
 
-fieldhash my %csv_file      => 'csv_file';
-fieldhash my %jquery        => 'jquery';
-fieldhash my %templater     => 'templater';
-fieldhash my %web_page_file => 'web_page_file';
+use Types::Standard qw/Bool Str/;
 
-our $VERSION = '1.01';
+has csv_file =>
+(
+	default  => sub{return ''},
+	is       => 'rw',
+	isa      => Str,
+	required => 0,
+);
+
+has jquery =>
+(
+	default  => sub{return 0},
+	is       => 'rw',
+	isa      => Bool,
+	required => 0,
+);
+
+has templater =>
+(
+	default  => sub{return ''},
+	is       => 'rw',
+	isa      => Str,
+	required => 0,
+);
+
+has web_page_file =>
+(
+	default  => sub{return ''},
+	is       => 'rw',
+	isa      => Str,
+	required => 0,
+);
+
+our $VERSION = '1.02';
 
 # -----------------------------------------------
 
@@ -125,6 +153,23 @@ EOS
 
 # -----------------------------------------------
 
+sub BUILD
+{
+	my($self) = @_;
+
+	$self -> templater
+	(
+		Text::Xslate -> new
+		(
+		 input_layer => '',
+		 path        => ${$self -> config}{_}{template_path},
+		)
+	);
+
+} # End of _init.
+
+# -----------------------------------------------
+
 sub build_names_data
 {
 	my($self) = @_;
@@ -170,42 +215,6 @@ sub export
 	return 0;
 
 } # End of export.
-
-# -----------------------------------------------
-
-sub _init
-{
-	my($self, $arg)      = @_;
-	$$arg{csv_file}      ||= ''; # Caller can set.
-	$$arg{jquery}        ||= 0;  # Caller can set.
-	$$arg{templater}     = '';
-	$$arg{web_page_file} ||= ''; # Caller can set.
-	$self                = $self -> SUPER::_init($arg);
-
-	$self -> templater
-	(
-		Text::Xslate -> new
-		(
-		 input_layer => '',
-		 path        => ${$self -> config}{_}{template_path},
-		)
-	);
-
-	return $self;
-
-} # End of _init.
-
-# -----------------------------------------------
-
-sub new
-{
-	my($class, %arg) = @_;
-	my($self)        = bless {}, $class;
-	$self            = $self -> _init(\%arg);
-
-	return $self;
-
-}	# End of new.
 
 # ------------------------------------------------
 

@@ -1,7 +1,6 @@
 package Lingua::EN::GivenNames;
 
-use feature qw/say unicode_strings/;
-use open qw(:std :utf8);
+use feature 'say';
 use strict;
 use warnings;
 use warnings qw(FATAL utf8);
@@ -11,31 +10,76 @@ use Config::Tiny;
 use File::ShareDir;
 use File::Spec;
 
-use Hash::FieldHash ':all';
+use Moo;
 
-fieldhash my %config      => 'config';
-fieldhash my %config_file => 'config_file';
-fieldhash my %data_dir    => 'data_dir';
-fieldhash my %sex         => 'sex';
-fieldhash my %share_dir   => 'share_dir';
-fieldhash my %sqlite_file => 'sqlite_file';
-fieldhash my %verbose     => 'verbose';
+use Types::Standard qw/Int Str/;
 
-our $VERSION = '1.01';
+has config =>
+(
+	default  => sub{return '.ht.lingua.en.givennames.conf'},
+	is       => 'rw',
+	isa      => Str,
+	required => 0,
+);
+
+has config_file =>
+(
+	default  => sub{return ''},
+	is       => 'rw',
+	isa      => Str,
+	required => 0,
+);
+
+has data_dir =>
+(
+	default  => sub{return 'data'},
+	is       => 'rw',
+	isa      => Str,
+	required => 0,
+);
+
+has sex =>
+(
+	default  => sub{return ''},
+	is       => 'rw',
+	isa      => Str,
+	required => 0,
+);
+
+has share_dir =>
+(
+	default  => sub{return ''},
+	is       => 'rw',
+	isa      => Str,
+	required => 0,
+);
+
+has sqlite_file =>
+(
+	default  => sub{return ''},
+	is       => 'rw',
+	isa      => Str,
+	required => 0,
+);
+
+has verbose =>
+(
+	default  => sub{return 0},
+	is       => 'rw',
+	isa      => Int,
+	required => 0,
+);
+
+
+our $VERSION = '1.02';
 
 # -----------------------------------------------
 
-sub _init
+sub BUILD
 {
-	my($self, $arg)    = @_;
-	$$arg{config_file} ||= '.ht.lingua.en.givennames.conf'; # Caller can set.
-	$$arg{data_dir}    = 'data';
-	$$arg{sex}         ||= ''; # Caller can set.
-	$$arg{share_dir}   = '';
-	$$arg{sqlite_file} ||= 'lingua.en.givennames.sqlite';  # Caller can set.
-	$$arg{verbose}     ||= 0; # Caller can set.
-	$self              = from_hash($self, $arg);
-	(my $package       = __PACKAGE__) =~ s/::/-/g;
+	my($self) = @_;
+
+	(my $package = __PACKAGE__) =~ s/::/-/g;
 
 	$self -> share_dir($ENV{AUTHOR_TESTING} ? 'share' : File::ShareDir::dist_dir($package) );
 	$self -> config_file(File::Spec -> catfile($self -> share_dir, $self -> config_file) );
@@ -50,9 +94,7 @@ sub _init
 	$self -> log(debug => 'Config file: ' . $self -> config_file);
 	$self -> log(debug => 'SQLite file: ' . $self -> sqlite_file);
 
-	return $self;
-
-} # End of _init.
+} # End of BUILD.
 
 # -----------------------------------------------
 
@@ -65,18 +107,6 @@ sub log
 	say "$level: $s" if ($self -> verbose);
 
 }	# End of log.
-
-# -----------------------------------------------
-
-sub new
-{
-	my($class, %arg) = @_;
-	my($self)        = bless {}, $class;
-	$self            = $self -> _init(\%arg);
-
-	return $self;
-
-}	# End of new.
 
 # -----------------------------------------------
 

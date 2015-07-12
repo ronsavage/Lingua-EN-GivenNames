@@ -1,7 +1,6 @@
 package Lingua::EN::GivenNames::Database::Import;
 
-use feature qw/say unicode_strings/;
-use open qw(:std :utf8);
+use feature 'say';
 use parent 'Lingua::EN::GivenNames::Database';
 use strict;
 use warnings;
@@ -13,18 +12,26 @@ use DBI;
 
 use File::Spec;
 
-use Hash::FieldHash ':all';
-
 use HTML::TreeBuilder;
+
+use Moo;
 
 use Text::CSV;
 use Text::CSV::Slurp;
 
 use Unicode::CaseFold;  # For fc().
 
-fieldhash my %page_number => 'page_number';
+use Types::Standard qw/Int/;
 
-our $VERSION = '1.01';
+has page_number =>
+(
+	default  => sub{return 1},
+	is       => 'rw',
+	isa      => Int,
+	required => 0,
+);
+
+our $VERSION = '1.02';
 
 # ----------------------------------------------
 
@@ -128,17 +135,6 @@ sub generate_derivation
 	return $s;
 
 } # End of generate_derivation.
-
-# -----------------------------------------------
-
-sub _init
-{
-	my($self, $arg)    = @_;
-	$$arg{page_number} ||= 1; # Caller can set.
-
-	return $self -> SUPER::_init($arg);
-
-} # End of _init.
 
 # ----------------------------------------------
 

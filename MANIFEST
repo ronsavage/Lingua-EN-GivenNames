@@ -1,4 +1,3 @@
-Build.PL
 Changelog.ini
 Changes
 data/derivations.csv
@@ -81,4 +80,4 @@ scripts/test.pattern.pl
 share/.ht.lingua.en.givennames.conf
 share/lingua.en.givennames.sqlite
 t/load.t
-t/pod.t
+xt/author/pod.t

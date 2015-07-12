@@ -1,15 +1,14 @@
 package Lingua::EN::GivenNames::Database::Create;
 
-use feature qw/say unicode_strings/;
-use open qw(:std :utf8);
+use feature 'say';
 use parent 'Lingua::EN::GivenNames::Database';
 use strict;
 use warnings;
 use warnings qw(FATAL utf8);
 
-use Hash::FieldHash ':all';
+use Moo;
 
-our $VERSION = '1.01';
+our $VERSION = '1.02';
 
 # -----------------------------------------------
 

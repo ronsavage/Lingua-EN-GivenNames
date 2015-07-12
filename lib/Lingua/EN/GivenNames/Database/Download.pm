@@ -1,7 +1,6 @@
 package Lingua::EN::GivenNames::Database::Download;
 
-use feature qw/say unicode_strings/;
-use open qw(:std :utf8);
+use feature 'say';
 use parent 'Lingua::EN::GivenNames::Database';
 use strict;
 use warnings;
@@ -9,14 +8,23 @@ use warnings qw(FATAL utf8);
 
 use File::Spec;
 
-use Hash::FieldHash ':all';
 use HTML::HTML5::Entities; # For decode_entities().
 
 use HTTP::Tiny;
 
-fieldhash my %url => 'url';
+use Moo;
 
-our $VERSION = '1.01';
+use Types::Standard qw/Str/;
+
+has url =>
+(
+	default  => sub{return 'http://www.20000-names.com/'},
+	is       => 'rw',
+	isa      => Str,
+	required => 0,
+);
+
+our $VERSION = '1.02';
 
 # -----------------------------------------------
 
@@ -104,30 +112,6 @@ sub get_name_pages
 	return $result;
 
 } # End of get_name_pages.
-
-# -----------------------------------------------
-
-sub _init
-{
-	my($self, $arg) = @_;
-	$$arg{url}      = 'http://www.20000-names.com/';
-	$self           = $self -> SUPER::_init($arg);
-
-	return $self;
-
-} # End of _init.
-
-# -----------------------------------------------
-
-sub new
-{
-	my($class, %arg) = @_;
-	my($self)        = bless {}, $class;
-	$self            = $self -> _init(\%arg);
-
-	return $self;
-
-}	# End of new.
 
 # -----------------------------------------------
 
