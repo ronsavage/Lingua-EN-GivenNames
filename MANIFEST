@@ -1,3 +1,4 @@
+.gitignore
 Changelog.ini
 Changes
 data/derivations.csv
