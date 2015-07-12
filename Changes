@@ -1,5 +1,8 @@
 Revision history for Perl extension Lingua::EN::GivenNames.
 
+1.04  Sun Jul 12 14:35:00 2015
+	- The distro uploaded as V 1.03 contained references to V 1.02.
+
 1.03  Sun Jul 12 14:16:00 2015
 	- Add github repo https://github.com/ronsavage/Lingua-EN-GivenNames.
 	- Fix typo in scripts/test.pattern.pl.
