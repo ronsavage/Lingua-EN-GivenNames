@@ -67,6 +67,7 @@ lib/Lingua/EN/GivenNames/Database/Create.pm
 lib/Lingua/EN/GivenNames/Database/Download.pm
 lib/Lingua/EN/GivenNames/Database/Export.pm
 lib/Lingua/EN/GivenNames/Database/Import.pm
+LICENSE
 Makefile.PL
 MANIFEST			This list of files
 META.json
