@@ -24,12 +24,12 @@ Old\s+?English|Pet|Polish|
 Scottish(?:\s+Anglicized)?|Short|Slovak|Spanish|Unisex|
 (?:V|v)ariant
 EOS
+	my($sub_pattern_1) = '.+'; # This is faked, since original sub_pattern_1 has been lost. See git!
 	my($sub_pattern_2) = <<'EOS';
 (?:(?:adopted|contracted|diminutive|elaborated|feminine|pet|short|unisex|variant)?\s*?
 EOS
 	# Note for 2 => Name: Beware 'NAME (Text):'. Also, text can contain ':'.
 if ($s =~	/
-		a => qr/
 			(.+?)\.\s            # 1 => Sex.
 			(.+?):\s*            # 2 => Name.
 			($sub_pattern_1)\s+? # 3 => Kind.

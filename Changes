@@ -1,5 +1,9 @@
 Revision history for Perl extension Lingua::EN::GivenNames.
 
+1.03  Sun Jul 12 14:16:00 2015
+	- Add github repo https://github.com/ronsavage/Lingua-EN-GivenNames.
+	- Fix typo in scripts/test.pattern.pl.
+
 1.02  Sun Jul 12 11:36:00 2015
 	- Remove the line which reads 'use open qw(:std :utf8);'. See RT#105798.
 	- Move t/pod.t to xt/author/.

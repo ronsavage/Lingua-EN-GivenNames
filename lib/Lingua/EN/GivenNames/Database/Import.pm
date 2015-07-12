@@ -31,7 +31,7 @@ has page_number =>
 	required => 0,
 );
 
-our $VERSION = '1.02';
+our $VERSION = '1.03';
 
 # ----------------------------------------------
 

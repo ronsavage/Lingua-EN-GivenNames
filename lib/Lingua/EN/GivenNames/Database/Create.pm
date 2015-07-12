@@ -8,7 +8,7 @@ use warnings qw(FATAL utf8);
 
 use Moo;
 
-our $VERSION = '1.02';
+our $VERSION = '1.03';
 
 # -----------------------------------------------
 
