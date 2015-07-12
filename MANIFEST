@@ -61,7 +61,6 @@ inc/Module/Install/Metadata.pm
 inc/Module/Install/Share.pm
 inc/Module/Install/Win32.pm
 inc/Module/Install/WriteAll.pm
-lib/MarpaX/Grammar/Parser.pm
 lib/Lingua/EN/GivenNames.pm
 lib/Lingua/EN/GivenNames/Database.pm
 lib/Lingua/EN/GivenNames/Database/Create.pm
